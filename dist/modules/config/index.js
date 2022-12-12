@@ -65,12 +65,13 @@ define("@banner/config", ["require", "exports", "@ijstech/components", "@banner/
             return _data;
         }
         set data(config) {
-            this.edtTitle.value = config.title.caption || "";
-            this.edtTitleColor.value = config.title.color || "";
-            this.edtDesc.value = config.description.caption || "";
-            this.edtDescColor.value = config.description.color || "";
-            this.edtButtonCaption.value = config.action.caption || "";
-            this.edtButtonLink.value = config.action.link || "";
+            var _a, _b, _c, _d, _e, _f;
+            this.edtTitle.value = ((_a = config.title) === null || _a === void 0 ? void 0 : _a.caption) || "";
+            this.edtTitleColor.value = ((_b = config.title) === null || _b === void 0 ? void 0 : _b.color) || "";
+            this.edtDesc.value = ((_c = config.description) === null || _c === void 0 ? void 0 : _c.caption) || "";
+            this.edtDescColor.value = ((_d = config.description) === null || _d === void 0 ? void 0 : _d.color) || "";
+            this.edtButtonCaption.value = ((_e = config.action) === null || _e === void 0 ? void 0 : _e.caption) || "";
+            this.edtButtonLink.value = ((_f = config.action) === null || _f === void 0 ? void 0 : _f.link) || "";
             if (config.background) {
                 this.edtBackground.preview(config.background);
             }

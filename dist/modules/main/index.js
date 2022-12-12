@@ -98,7 +98,7 @@ define("@banner/main", ["require", "exports", "@ijstech/components", "@banner/co
                     this.$render("i-label", { caption: this._data.title.caption, font: { size: '3rem', bold: true, color: titleColor }, lineHeight: 1.5 }),
                     this.$render("i-label", { caption: ((_b = this._data.description) === null || _b === void 0 ? void 0 : _b.caption) || '', font: { size: '1.375rem', color: descColor }, lineHeight: 1.2 }),
                     ((_d = (_c = this._data) === null || _c === void 0 ? void 0 : _c.action) === null || _d === void 0 ? void 0 : _d.caption) ? (this.$render("i-panel", null,
-                        this.$render("i-button", { caption: this._data.action.caption, padding: { left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem' }, onClick: () => window.location.href = this._data.action.link, class: index_css_1.actionButtonStyle }))) : this.$render("i-label", null))));
+                        this.$render("i-button", { caption: this._data.action.caption, padding: { left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem' }, onClick: () => window.location.href = this._data.action.link, font: { color: Theme.colors.primary.contrastText }, class: index_css_1.actionButtonStyle }))) : this.$render("i-label", null))));
             this.pnlCardBody.appendChild(item);
         }
         render() {

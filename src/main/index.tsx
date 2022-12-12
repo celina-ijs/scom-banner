@@ -105,6 +105,7 @@ export default class Main extends Module implements PageBlock {
                   caption={this._data.action.caption}
                   padding={{left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem'}}
                   onClick={() => window.location.href = this._data.action.link}
+                  font={{ color: Theme.colors.primary.contrastText }}
                   class={actionButtonStyle}
                 ></i-button>
               </i-panel>

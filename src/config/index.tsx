@@ -53,12 +53,12 @@ export default class Config extends Module {
   }
 
   set data(config: IConfig) {
-    this.edtTitle.value = config.title.caption || "";
-    this.edtTitleColor.value = config.title.color || "";
-    this.edtDesc.value = config.description.caption || "";
-    this.edtDescColor.value = config.description.color || "";
-    this.edtButtonCaption.value = config.action.caption || "";
-    this.edtButtonLink.value = config.action.link || "";
+    this.edtTitle.value = config.title?.caption || "";
+    this.edtTitleColor.value = config.title?.color || "";
+    this.edtDesc.value = config.description?.caption || "";
+    this.edtDescColor.value = config.description?.color || "";
+    this.edtButtonCaption.value = config.action?.caption || "";
+    this.edtButtonLink.value = config.action?.link || "";
     if (config.background) {
       this.edtBackground.preview(config.background);
     }
