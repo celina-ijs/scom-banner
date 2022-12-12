@@ -1,6 +1,12 @@
 interface IConfig {
-  title?: string;
-  description?: string;
+  title: {
+    caption: string;
+    color?: string;
+  };
+  description?: {
+    caption?: string;
+    color?: string;
+  },
   action?: {
     caption?: string;
     link?: string;

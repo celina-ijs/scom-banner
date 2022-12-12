@@ -5,10 +5,6 @@
     "moduleDir": "modules",
     "main": "@banner/main",
     "modules": {
-        "@banner/assets": {
-            "path": "assets",
-            "dependencies": []
-        },
         "@banner/main": {
             "path": "main",
             "dependencies": [

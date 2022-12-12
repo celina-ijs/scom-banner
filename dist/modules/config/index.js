@@ -17,6 +17,7 @@ define("@banner/config/config.css.ts", ["require", "exports", "@ijstech/componen
         }
     });
     exports.uploadStyle = components_1.Styles.style({
+        margin: '0',
         $nest: {
             '.i-upload_preview-img': {
                 maxHeight: '100%',
@@ -24,7 +25,8 @@ define("@banner/config/config.css.ts", ["require", "exports", "@ijstech/componen
             },
             '.i-upload-wrapper': {
                 maxHeight: 'inherit',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                marginBottom: 0
             }
         }
     });
@@ -45,8 +47,14 @@ define("@banner/config", ["require", "exports", "@ijstech/components", "@banner/
         }
         get data() {
             const _data = {
-                title: this.edtTitle.value || "",
-                description: this.edtDesc.value || "",
+                title: {
+                    caption: this.edtTitle.value || "",
+                    color: this.edtTitleColor.value || ""
+                },
+                description: {
+                    caption: this.edtDesc.value || "",
+                    color: this.edtDescColor.value || ""
+                },
                 action: {
                     caption: this.edtButtonCaption.value || "",
                     link: this.edtButtonLink.value || ""
@@ -57,8 +65,10 @@ define("@banner/config", ["require", "exports", "@ijstech/components", "@banner/
             return _data;
         }
         set data(config) {
-            this.edtTitle.value = config.title || "";
-            this.edtDesc.value = config.description || "";
+            this.edtTitle.value = config.title.caption || "";
+            this.edtTitleColor.value = config.title.color || "";
+            this.edtDesc.value = config.description.caption || "";
+            this.edtDescColor.value = config.description.color || "";
             this.edtButtonCaption.value = config.action.caption || "";
             this.edtButtonLink.value = config.action.link || "";
             if (config.background) {
@@ -81,19 +91,28 @@ define("@banner/config", ["require", "exports", "@ijstech/components", "@banner/
                     this.$render("i-label", { caption: "Title" }),
                     this.$render("i-label", { caption: "*", font: { color: 'red' }, margin: { left: '4px' } }),
                     this.$render("i-label", { caption: ":" })),
-                this.$render("i-input", { id: "edtTitle", width: "100%" }),
+                this.$render("i-vstack", { border: { width: 1, style: 'solid', color: 'rgba(217,225,232,.38)', radius: 5 }, gap: '0.5rem', padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' } },
+                    this.$render("i-hstack", null,
+                        this.$render("i-label", { caption: "Caption" }),
+                        this.$render("i-label", { caption: "*", font: { color: 'red' }, margin: { left: '4px' } }),
+                        this.$render("i-label", { caption: ":" })),
+                    this.$render("i-input", { id: "edtTitle", width: "100%" }),
+                    this.$render("i-label", { caption: "Color:" }),
+                    this.$render("i-input", { id: "edtTitleColor", inputType: "color", width: "100px" })),
                 this.$render("i-label", { caption: "Description:" }),
-                this.$render("i-input", { id: "edtDesc", class: config_css_1.textareaStyle, width: "100%", height: "auto", resize: "auto-grow", inputType: 'textarea' }),
+                this.$render("i-vstack", { border: { width: 1, style: 'solid', color: 'rgba(217,225,232,.38)', radius: 5 }, gap: '0.5rem', padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' } },
+                    this.$render("i-label", { caption: "Caption:" }),
+                    this.$render("i-input", { id: "edtDesc", class: config_css_1.textareaStyle, width: "100%", height: "auto", resize: "auto-grow", inputType: 'textarea' }),
+                    this.$render("i-label", { caption: "Color:" }),
+                    this.$render("i-input", { id: "edtDescColor", inputType: "color", width: "100px" })),
+                this.$render("i-label", { caption: "Backgound:" }),
+                this.$render("i-upload", { id: "edtBackground", maxHeight: 200, maxWidth: 200, class: config_css_1.uploadStyle, onChanged: this.onChangedImage.bind(this), onRemoved: () => this.onRemovedImage() }),
                 this.$render("i-label", { caption: "Action button" }),
                 this.$render("i-vstack", { border: { width: 1, style: 'solid', color: 'rgba(217,225,232,.38)', radius: 5 }, gap: '0.5rem', padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' } },
                     this.$render("i-label", { caption: "Caption:" }),
                     this.$render("i-input", { id: "edtButtonCaption", width: "100%" }),
                     this.$render("i-label", { caption: "Link:" }),
-                    this.$render("i-input", { id: "edtButtonLink", width: "100%" }),
-                    this.$render("i-label", { caption: "Backgound:" }),
-                    this.$render("i-upload", { id: "edtBackground", maxHeight: 200, maxWidth: 200, class: config_css_1.uploadStyle, 
-                        // fileList={item?.file ? [item.file] : [] }
-                        onChanged: this.onChangedImage.bind(this), onRemoved: () => this.onRemovedImage() }))));
+                    this.$render("i-input", { id: "edtButtonLink", width: "100%" }))));
         }
     };
     Config = __decorate([
