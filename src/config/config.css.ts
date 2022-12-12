@@ -10,6 +10,7 @@ export const textareaStyle = Styles.style({
 })
 
 export const uploadStyle = Styles.style({
+  margin: '0',
   $nest: {
     '.i-upload_preview-img': {
       maxHeight: '100%',
@@ -17,7 +18,8 @@ export const uploadStyle = Styles.style({
     },
     '.i-upload-wrapper': {
       maxHeight: 'inherit',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      marginBottom: 0
     }
   }
 })

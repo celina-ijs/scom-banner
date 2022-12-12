@@ -38,10 +38,16 @@ define("@banner/main", ["require", "exports", "@ijstech/components", "@banner/co
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Config = void 0;
     exports.Config = config_1.default;
+    const Theme = components_2.Styles.Theme.ThemeVars;
     let Main = class Main extends components_2.Module {
         constructor() {
             super(...arguments);
-            this._data = {};
+            this._data = {
+                title: {
+                    caption: '',
+                    color: ''
+                }
+            };
             this.defaultEdit = true;
         }
         getData() {
@@ -83,13 +89,15 @@ define("@banner/main", ["require", "exports", "@ijstech/components", "@banner/co
             this.renderUI();
         }
         renderUI() {
-            var _a, _b;
+            var _a, _b, _c, _d;
             this.pnlCardBody.clearInnerHTML();
+            const titleColor = this._data.title.color || Theme.text.primary;
+            const descColor = ((_a = this._data.description) === null || _a === void 0 ? void 0 : _a.color) || Theme.text.primary;
             const item = (this.$render("i-hstack", { background: { image: this._data.background || '', color: 'transparent' }, minHeight: 500, verticalAlignment: "center", class: index_css_1.backgroundStyle },
-                this.$render("i-vstack", { gap: "0.5rem", class: index_css_1.containerStyle },
-                    this.$render("i-label", { caption: this._data.title, font: { size: '3rem', bold: true }, lineHeight: 1.5 }),
-                    this.$render("i-label", { caption: this._data.description, font: { size: '1.375rem' }, lineHeight: 1.2 }),
-                    ((_b = (_a = this._data) === null || _a === void 0 ? void 0 : _a.action) === null || _b === void 0 ? void 0 : _b.caption) ? (this.$render("i-panel", null,
+                this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle },
+                    this.$render("i-label", { caption: this._data.title.caption, font: { size: '3rem', bold: true, color: titleColor }, lineHeight: 1.5 }),
+                    this.$render("i-label", { caption: ((_b = this._data.description) === null || _b === void 0 ? void 0 : _b.caption) || '', font: { size: '1.375rem', color: descColor }, lineHeight: 1.2 }),
+                    ((_d = (_c = this._data) === null || _c === void 0 ? void 0 : _c.action) === null || _d === void 0 ? void 0 : _d.caption) ? (this.$render("i-panel", null,
                         this.$render("i-button", { caption: this._data.action.caption, padding: { left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem' }, onClick: () => window.location.href = this._data.action.link, class: index_css_1.actionButtonStyle }))) : this.$render("i-label", null))));
             this.pnlCardBody.appendChild(item);
         }
