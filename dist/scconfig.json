@@ -1,0 +1,31 @@
+{
+    "name": "@banner/main",
+    "version": "0.1.0",
+    "env": "",
+    "moduleDir": "modules",
+    "main": "@banner/main",
+    "modules": {
+        "@banner/assets": {
+            "path": "assets",
+            "dependencies": []
+        },
+        "@banner/main": {
+            "path": "main",
+            "dependencies": [
+                "@banner/global",
+                "@banner/config"
+            ]
+        },
+        "@banner/global": {
+            "path": "global",
+            "dependencies": []
+        },
+        "@banner/config": {
+            "path": "config",
+            "dependencies": [
+                "@banner/global"
+            ]
+        }
+    },
+    "dependencies": {}
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@banner/main",
+  "version": "0.1.0",
+  "env": "",
+  "moduleDir": "src",
+  "main": "@banner/main",
+  "modules": {
+    "@banner/main": {
+      "path": "main"
+    },
+    "@banner/global": {
+      "path": "global"
+    },
+    "@banner/config": {
+      "path": "config"
+    }
+  },
+  "dependencies": {}
+}
