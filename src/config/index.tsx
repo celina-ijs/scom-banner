@@ -46,8 +46,7 @@ export default class Config extends Module {
         caption: this.edtButtonCaption.value || "",
         link: this.edtButtonLink.value || ""
       },
-      background: this.backgroundData.base64,
-      file: this.backgroundData.file
+      background: this.backgroundData.base64
     };
     return _data
   }
@@ -62,7 +61,8 @@ export default class Config extends Module {
     if (config.background) {
       this.edtBackground.preview(config.background);
     }
-    this.edtBackground.fileList = config.file ? [config.file] : [];
+    if (!this.edtBackground.fileList.length && config.background)
+      this.edtBackground.fileList = [new File([], '')];
   }
 
   private onRemovedImage() {

@@ -12,7 +12,6 @@ interface IConfig {
     link?: string;
   },
   background?: string;
-  file?: File;
 }
 
 export {

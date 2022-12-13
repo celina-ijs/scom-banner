@@ -59,8 +59,7 @@ define("@banner/config", ["require", "exports", "@ijstech/components", "@banner/
                     caption: this.edtButtonCaption.value || "",
                     link: this.edtButtonLink.value || ""
                 },
-                background: this.backgroundData.base64,
-                file: this.backgroundData.file
+                background: this.backgroundData.base64
             };
             return _data;
         }
@@ -75,7 +74,8 @@ define("@banner/config", ["require", "exports", "@ijstech/components", "@banner/
             if (config.background) {
                 this.edtBackground.preview(config.background);
             }
-            this.edtBackground.fileList = config.file ? [config.file] : [];
+            if (!this.edtBackground.fileList.length && config.background)
+                this.edtBackground.fileList = [new File([], '')];
         }
         onRemovedImage() {
             this.backgroundData.base64 = '';
