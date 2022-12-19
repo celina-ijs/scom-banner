@@ -68,7 +68,7 @@ export default class Main extends Module implements PageBlock {
   
   validate() {
     const data = this.cardConfig.data;
-    const emptyProp = !data.title;
+    const emptyProp = !data.title.caption;
     return !emptyProp;
   }
 
@@ -87,7 +87,7 @@ export default class Main extends Module implements PageBlock {
         verticalAlignment="center"
         class={backgroundStyle}
       >
-        <i-vstack gap="1.5rem" class={containerStyle}>
+        <i-vstack gap="1.5rem" class={containerStyle} padding={{left: '1rem', right: '1rem'}}>
           <i-label
             caption={this._data.title.caption}
             font={{ size: '3rem', bold: true, color: titleColor  }}
@@ -104,8 +104,9 @@ export default class Main extends Module implements PageBlock {
                 <i-button
                   caption={this._data.action.caption}
                   padding={{left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem'}}
-                  onClick={() => window.location.href = this._data.action.link}
-                  font={{ color: Theme.colors.primary.contrastText }}
+                  onClick={() => this._data.action.link ? window.location.href = this._data.action.link : {}}
+                  font={{ color: this._data.action?.captionColor || Theme.colors.primary.contrastText }}
+                  background={{color: this._data.action?.color || Theme.colors.primary.main}}
                   class={actionButtonStyle}
                 ></i-button>
               </i-panel>

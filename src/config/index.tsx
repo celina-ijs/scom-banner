@@ -26,6 +26,8 @@ export default class Config extends Module {
   private edtTitleColor: Input;
   private edtButtonCaption: Input;
   private edtButtonLink: Input;
+  private edtButtonColor: Input;
+  private edtButtonCaptionColor: Input;
   private edtBackground: Upload;
   private backgroundData: { file: File, base64: string } = {
     file: undefined,
@@ -44,6 +46,8 @@ export default class Config extends Module {
       },
       action: {
         caption: this.edtButtonCaption.value || "",
+        captionColor: this.edtButtonCaptionColor.value || "",
+        color: this.edtButtonColor.value || "",
         link: this.edtButtonLink.value || ""
       },
       background: this.backgroundData.base64
@@ -58,6 +62,8 @@ export default class Config extends Module {
     this.edtDescColor.value = config.description?.color || "";
     this.edtButtonCaption.value = config.action?.caption || "";
     this.edtButtonLink.value = config.action?.link || "";
+    this.edtButtonCaptionColor.value = config.action?.captionColor || "";
+    this.edtButtonColor.value = config.action?.color || "";
     if (config.background) {
       this.edtBackground.preview(config.background);
     }
@@ -84,39 +90,29 @@ export default class Config extends Module {
           <i-label caption="*" font={{ color: 'red' }} margin={{left: '4px'}}></i-label>
           <i-label caption=":"></i-label>
         </i-hstack>
-        <i-vstack
-          border={{ width: 1, style: 'solid', color: 'rgba(217,225,232,.38)', radius: 5 }}
-          gap='0.5rem'
-          padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }}
-        >
-          <i-hstack>
-            <i-label caption="Caption"></i-label>
-            <i-label caption="*" font={{ color: 'red' }} margin={{left: '4px'}}></i-label>
-            <i-label caption=":"></i-label>
-          </i-hstack>
-          <i-input id="edtTitle" width="100%"></i-input>
-          <i-label caption="Color:"></i-label>
-          <i-input id="edtTitleColor" inputType="color" width="100px"></i-input>
-        </i-vstack>
+        <i-input id="edtTitle" width="100%"></i-input>
+        <i-label caption="Title Font Color:"></i-label>
+        <i-input id="edtTitleColor" inputType="color" width="100px"></i-input>
         <i-label caption="Description:"></i-label>
-        <i-vstack
-          border={{ width: 1, style: 'solid', color: 'rgba(217,225,232,.38)', radius: 5 }}
-          gap='0.5rem'
-          padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }}
-        >
-          <i-label caption="Caption:"></i-label>
-          <i-input
-            id="edtDesc"
-            class={textareaStyle}
-            width="100%"
-            height="auto"
-            resize="auto-grow"
-            inputType='textarea'
-          ></i-input>
-          <i-label caption="Color:"></i-label>
-          <i-input id="edtDescColor" inputType="color" width="100px"></i-input>
-        </i-vstack>
-        <i-label caption="Backgound:"></i-label>
+        <i-input
+          id="edtDesc"
+          class={textareaStyle}
+          width="100%"
+          height="auto"
+          resize="auto-grow"
+          inputType='textarea'
+        ></i-input>
+        <i-label caption="Description Font Color:"></i-label>
+        <i-input id="edtDescColor" inputType="color" width="100px"></i-input>
+        <i-label caption="Link Button Caption"></i-label>
+        <i-input id="edtButtonCaption" width="100%"></i-input>
+        <i-label caption="Link Button Color:"></i-label>
+        <i-input id="edtButtonColor" inputType="color" width="100px"></i-input>
+        <i-label caption="Link Button Caption Color:"></i-label>
+        <i-input id="edtButtonCaptionColor" inputType="color" width="100px"></i-input>
+        <i-label caption="Link Button URL:"></i-label>
+        <i-input id="edtButtonLink" width="100%"></i-input>
+        <i-label caption="Backgound Image:"></i-label>
         <i-upload
           id="edtBackground"
           maxHeight={200}
@@ -125,17 +121,6 @@ export default class Config extends Module {
           onChanged={this.onChangedImage.bind(this)}
           onRemoved={() => this.onRemovedImage()}
         ></i-upload>
-        <i-label caption="Action button"></i-label>
-        <i-vstack
-          border={{ width: 1, style: 'solid', color: 'rgba(217,225,232,.38)', radius: 5 }}
-          gap='0.5rem'
-          padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }}
-        >
-          <i-label caption="Caption:"></i-label>
-          <i-input id="edtButtonCaption" width="100%"></i-input>
-          <i-label caption="Link:"></i-label>
-          <i-input id="edtButtonLink" width="100%"></i-input>
-        </i-vstack>
       </i-vstack>
     )
   }

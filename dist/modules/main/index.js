@@ -82,23 +82,23 @@ define("@banner/main", ["require", "exports", "@ijstech/components", "@banner/co
         async config() { }
         validate() {
             const data = this.cardConfig.data;
-            const emptyProp = !data.title;
+            const emptyProp = !data.title.caption;
             return !emptyProp;
         }
         onUpdateBlock() {
             this.renderUI();
         }
         renderUI() {
-            var _a, _b, _c, _d;
+            var _a, _b, _c, _d, _e, _f;
             this.pnlCardBody.clearInnerHTML();
             const titleColor = this._data.title.color || Theme.text.primary;
             const descColor = ((_a = this._data.description) === null || _a === void 0 ? void 0 : _a.color) || Theme.text.primary;
             const item = (this.$render("i-hstack", { background: { image: this._data.background || '', color: 'transparent' }, minHeight: 500, verticalAlignment: "center", class: index_css_1.backgroundStyle },
-                this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle },
+                this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle, padding: { left: '1rem', right: '1rem' } },
                     this.$render("i-label", { caption: this._data.title.caption, font: { size: '3rem', bold: true, color: titleColor }, lineHeight: 1.5 }),
                     this.$render("i-label", { caption: ((_b = this._data.description) === null || _b === void 0 ? void 0 : _b.caption) || '', font: { size: '1.375rem', color: descColor }, lineHeight: 1.2 }),
                     ((_d = (_c = this._data) === null || _c === void 0 ? void 0 : _c.action) === null || _d === void 0 ? void 0 : _d.caption) ? (this.$render("i-panel", null,
-                        this.$render("i-button", { caption: this._data.action.caption, padding: { left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem' }, onClick: () => window.location.href = this._data.action.link, font: { color: Theme.colors.primary.contrastText }, class: index_css_1.actionButtonStyle }))) : this.$render("i-label", null))));
+                        this.$render("i-button", { caption: this._data.action.caption, padding: { left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem' }, onClick: () => this._data.action.link ? window.location.href = this._data.action.link : {}, font: { color: ((_e = this._data.action) === null || _e === void 0 ? void 0 : _e.captionColor) || Theme.colors.primary.contrastText }, background: { color: ((_f = this._data.action) === null || _f === void 0 ? void 0 : _f.color) || Theme.colors.primary.main }, class: index_css_1.actionButtonStyle }))) : this.$render("i-label", null))));
             this.pnlCardBody.appendChild(item);
         }
         render() {
