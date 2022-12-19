@@ -13,6 +13,9 @@
     },
     "@banner/config": {
       "path": "config"
+    },
+    "@banner/alert": {
+      "path": "alert"
     }
   },
   "dependencies": {}

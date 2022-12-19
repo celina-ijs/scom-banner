@@ -7,6 +7,7 @@ import {
 import { PageBlock, IConfig } from '@banner/global';
 import Config from '@banner/config';
 import {containerStyle, backgroundStyle, actionButtonStyle } from './index.css';
+import Alert from '@banner/alert';
 export { Config };
 const Theme = Styles.Theme.ThemeVars;
 
@@ -15,6 +16,7 @@ export default class Main extends Module implements PageBlock {
   private pnlCard: Panel
   private pnlCardBody: Panel
   private cardConfig: Config
+  private alertElm: Alert
 
   private _data: IConfig = {
     title: {
@@ -69,7 +71,15 @@ export default class Main extends Module implements PageBlock {
   validate() {
     const data = this.cardConfig.data;
     const emptyProp = !data.title.caption;
-    return !emptyProp;
+    if (emptyProp) {
+      this.alertElm.message = {
+        status: 'error',
+        content: 'Required field is missing.'
+      }
+      this.alertElm.showModal();
+      return false;
+    }
+    return true;
   }
 
   onUpdateBlock() {
@@ -133,7 +143,10 @@ export default class Main extends Module implements PageBlock {
         <pageblock-banner-config
           id='cardConfig'
           visible={false}
-        ></pageblock-banner-config>
+        />
+        <pageblock-banner-alert
+          id="alertElm"
+        />
       </i-panel>
     )
   }

@@ -83,7 +83,15 @@ define("@banner/main", ["require", "exports", "@ijstech/components", "@banner/co
         validate() {
             const data = this.cardConfig.data;
             const emptyProp = !data.title.caption;
-            return !emptyProp;
+            if (emptyProp) {
+                this.alertElm.message = {
+                    status: 'error',
+                    content: 'Required field is missing.'
+                };
+                this.alertElm.showModal();
+                return false;
+            }
+            return true;
         }
         onUpdateBlock() {
             this.renderUI();
@@ -107,7 +115,8 @@ define("@banner/main", ["require", "exports", "@ijstech/components", "@banner/co
                     this.$render("i-hstack", { id: 'pnlCardHeader', verticalAlignment: 'center', horizontalAlignment: 'center' }),
                     this.$render("i-panel", { id: 'pnlCardBody' }),
                     this.$render("i-panel", { id: 'pnlCardFooter' })),
-                this.$render("pageblock-banner-config", { id: 'cardConfig', visible: false })));
+                this.$render("pageblock-banner-config", { id: 'cardConfig', visible: false }),
+                this.$render("pageblock-banner-alert", { id: "alertElm" })));
         }
     };
     Main = __decorate([
