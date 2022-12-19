@@ -9,6 +9,8 @@ interface IConfig {
   },
   action?: {
     caption?: string;
+    captionColor?: string;
+    color?: string;
     link?: string;
   },
   background?: string;
