@@ -2,7 +2,8 @@ import {
   Module,
   customModule,
   Styles,
-  Panel
+  Panel,
+  Control
 } from '@ijstech/components';
 import { PageBlock, IConfig } from '@banner/global';
 import Config from '@banner/config';
@@ -11,6 +12,37 @@ import Alert from '@banner/alert';
 export { Config };
 const Theme = Styles.Theme.ThemeVars;
 
+const configSchema = {
+  type: 'object',
+  required: [],
+  properties: {
+    titleFontColor: {
+      type: 'string',
+      format: 'color'
+    },
+    descriptionFontColor: {
+      type: 'string',
+      format: 'color'
+    },
+    linkButtonCaptionColor: {
+      type: 'string',
+      format: 'color'
+    },
+    linkButtonColor: {
+      type: 'string',
+      format: 'color'
+    },
+    textAlign: {
+      type: 'string',
+      enum: [
+        'left',
+        'center',
+        'right'
+      ]
+  }
+  }
+}
+
 @customModule
 export default class Main extends Module implements PageBlock {
   private pnlCard: Panel
@@ -18,12 +50,7 @@ export default class Main extends Module implements PageBlock {
   private cardConfig: Config
   private alertElm: Alert
 
-  private _data: IConfig = {
-    title: {
-      caption: '',
-      color: ''
-    }
-  }
+  private _data: IConfig = { title: '' }
   tag: any
   defaultEdit: boolean = true
   readonly onConfirm: () => Promise<void>
@@ -37,7 +64,7 @@ export default class Main extends Module implements PageBlock {
   async setData(data: IConfig) {
     this._data = data
     this.cardConfig.data = data
-    this.onUpdateBlock()
+    this.onUpdateBlock(this.tag)
   }
 
   getTag() {
@@ -45,7 +72,17 @@ export default class Main extends Module implements PageBlock {
   }
 
   async setTag(value: any) {
-    this.tag = value
+    this.tag = value;
+    this.onUpdateBlock(value);
+  }
+
+  getConfigSchema() {
+    return configSchema;
+  }
+
+  onConfigSave(config: any) {
+    this.tag = config;
+    this.onUpdateBlock(config);
   }
 
   async edit() {
@@ -56,7 +93,7 @@ export default class Main extends Module implements PageBlock {
 
   async confirm() {
     this._data = this.cardConfig.data
-    this.onUpdateBlock()
+    this.onUpdateBlock(this.tag)
     this.pnlCard.visible = true
     this.cardConfig.visible = false
   }
@@ -70,7 +107,7 @@ export default class Main extends Module implements PageBlock {
   
   validate() {
     const data = this.cardConfig.data;
-    const emptyProp = !data.title.caption;
+    const emptyProp = !data.title;
     if (emptyProp) {
       this.alertElm.message = {
         status: 'error',
@@ -82,47 +119,52 @@ export default class Main extends Module implements PageBlock {
     return true;
   }
 
-  onUpdateBlock() {
-    this.renderUI()
-  }
-
-  renderUI() {
-    this.pnlCardBody.clearInnerHTML()
-    const titleColor = this._data.title.color || Theme.text.primary;
-    const descColor = this._data.description?.color || Theme.text.primary;
+  onUpdateBlock(config: any) {
+    const {
+      titleFontColor = Theme.text.primary,
+      descriptionFontColor = Theme.text.primary,
+      linkButtonCaptionColor = Theme.colors.primary.contrastText,
+      linkButtonColor = Theme.colors.primary.main,
+      textAlign
+    } = config || {};
+    this.pnlCardBody.clearInnerHTML();
+    const mainStack: Control = (
+      <i-vstack gap="1.5rem" class={containerStyle} padding={{left: '1rem', right: '1rem'}}>
+        <i-label
+          caption={this._data.title}
+          font={{ size: '3rem', bold: true, color: titleFontColor  }}
+          lineHeight={1.5}
+        ></i-label>
+        <i-label
+          caption={this._data.description || ''}
+          font={{ size: '1.375rem', color: descriptionFontColor }}
+          lineHeight={1.2}
+        ></i-label>
+        {
+          this._data?.linkCaption ? (
+            <i-panel>
+              <i-button
+                caption={this._data.linkCaption}
+                padding={{left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem'}}
+                onClick={() => this._data?.linkUrl ? window.location.href = this._data.linkUrl : {}}
+                font={{ color: linkButtonCaptionColor }}
+                background={{color: linkButtonColor}}
+                class={actionButtonStyle}
+              ></i-button>
+            </i-panel>
+          ) : <i-label></i-label>
+        }
+      </i-vstack>
+    )
+    mainStack.style.textAlign = textAlign || 'left';
     const item = (
       <i-hstack
-        background={{image: this._data.background || '', color: 'transparent'}}
+        background={{image: this._data.backgroundImage || '', color: 'transparent'}}
         minHeight={500}
         verticalAlignment="center"
         class={backgroundStyle}
       >
-        <i-vstack gap="1.5rem" class={containerStyle} padding={{left: '1rem', right: '1rem'}}>
-          <i-label
-            caption={this._data.title.caption}
-            font={{ size: '3rem', bold: true, color: titleColor  }}
-            lineHeight={1.5}
-          ></i-label>
-          <i-label
-            caption={this._data.description?.caption || ''}
-            font={{ size: '1.375rem', color: descColor }}
-            lineHeight={1.2}
-          ></i-label>
-          {
-            this._data?.action?.caption ? (
-              <i-panel>
-                <i-button
-                  caption={this._data.action.caption}
-                  padding={{left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem'}}
-                  onClick={() => this._data.action.link ? window.location.href = this._data.action.link : {}}
-                  font={{ color: this._data.action?.captionColor || Theme.colors.primary.contrastText }}
-                  background={{color: this._data.action?.color || Theme.colors.primary.main}}
-                  class={actionButtonStyle}
-                ></i-button>
-              </i-panel>
-            ) : <i-label></i-label>
-          }
-        </i-vstack>
+        { mainStack }
       </i-hstack>
     )
     this.pnlCardBody.appendChild(item)
