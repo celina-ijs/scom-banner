@@ -47,38 +47,22 @@ define("@banner/config", ["require", "exports", "@ijstech/components", "@banner/
         }
         get data() {
             const _data = {
-                title: {
-                    caption: this.edtTitle.value || "",
-                    color: this.edtTitleColor.value || ""
-                },
-                description: {
-                    caption: this.edtDesc.value || "",
-                    color: this.edtDescColor.value || ""
-                },
-                action: {
-                    caption: this.edtButtonCaption.value || "",
-                    captionColor: this.edtButtonCaptionColor.value || "",
-                    color: this.edtButtonColor.value || "",
-                    link: this.edtButtonLink.value || ""
-                },
-                background: this.backgroundData.base64
+                title: this.edtTitle.value || "",
+                description: this.edtDesc.value || "",
+                linkCaption: this.edtButtonCaption.value || "",
+                linkUrl: this.edtButtonLink.value || "",
+                backgroundImage: this.backgroundData.base64
             };
             return _data;
         }
         set data(config) {
-            var _a, _b, _c, _d, _e, _f, _g, _h;
-            this.edtTitle.value = ((_a = config.title) === null || _a === void 0 ? void 0 : _a.caption) || "";
-            this.edtTitleColor.value = ((_b = config.title) === null || _b === void 0 ? void 0 : _b.color) || "";
-            this.edtDesc.value = ((_c = config.description) === null || _c === void 0 ? void 0 : _c.caption) || "";
-            this.edtDescColor.value = ((_d = config.description) === null || _d === void 0 ? void 0 : _d.color) || "";
-            this.edtButtonCaption.value = ((_e = config.action) === null || _e === void 0 ? void 0 : _e.caption) || "";
-            this.edtButtonLink.value = ((_f = config.action) === null || _f === void 0 ? void 0 : _f.link) || "";
-            this.edtButtonCaptionColor.value = ((_g = config.action) === null || _g === void 0 ? void 0 : _g.captionColor) || "";
-            this.edtButtonColor.value = ((_h = config.action) === null || _h === void 0 ? void 0 : _h.color) || "";
-            if (config.background) {
-                this.edtBackground.preview(config.background);
-            }
-            if (!this.edtBackground.fileList.length && config.background)
+            this.edtTitle.value = config.title || "";
+            this.edtDesc.value = config.description || "";
+            this.edtButtonCaption.value = config.linkCaption || "";
+            this.edtButtonLink.value = config.linkUrl || "";
+            if (config.backgroundImage)
+                this.edtBackground.preview(config.backgroundImage);
+            if (!this.edtBackground.fileList.length && config.backgroundImage)
                 this.edtBackground.fileList = [new File([], '')];
         }
         onRemovedImage() {
@@ -97,18 +81,10 @@ define("@banner/config", ["require", "exports", "@ijstech/components", "@banner/
                     this.$render("i-label", { caption: "*", font: { color: 'red' }, margin: { left: '4px' } }),
                     this.$render("i-label", { caption: ":" })),
                 this.$render("i-input", { id: "edtTitle", width: "100%" }),
-                this.$render("i-label", { caption: "Title Font Color:" }),
-                this.$render("i-input", { id: "edtTitleColor", inputType: "color", width: "100px" }),
                 this.$render("i-label", { caption: "Description:" }),
                 this.$render("i-input", { id: "edtDesc", class: config_css_1.textareaStyle, width: "100%", height: "auto", resize: "auto-grow", inputType: 'textarea' }),
-                this.$render("i-label", { caption: "Description Font Color:" }),
-                this.$render("i-input", { id: "edtDescColor", inputType: "color", width: "100px" }),
                 this.$render("i-label", { caption: "Link Button Caption" }),
                 this.$render("i-input", { id: "edtButtonCaption", width: "100%" }),
-                this.$render("i-label", { caption: "Link Button Color:" }),
-                this.$render("i-input", { id: "edtButtonColor", inputType: "color", width: "100px" }),
-                this.$render("i-label", { caption: "Link Button Caption Color:" }),
-                this.$render("i-input", { id: "edtButtonCaptionColor", inputType: "color", width: "100px" }),
                 this.$render("i-label", { caption: "Link Button URL:" }),
                 this.$render("i-input", { id: "edtButtonLink", width: "100%" }),
                 this.$render("i-label", { caption: "Backgound Image:" }),

@@ -22,52 +22,34 @@ declare global {
 export default class Config extends Module {
   private edtTitle: Input;
   private edtDesc: Input;
-  private edtDescColor: Input;
-  private edtTitleColor: Input;
   private edtButtonCaption: Input;
   private edtButtonLink: Input;
-  private edtButtonColor: Input;
-  private edtButtonCaptionColor: Input;
   private edtBackground: Upload;
   private backgroundData: { file: File, base64: string } = {
     file: undefined,
     base64: ''
-  };
+  }
 
   get data() {
     const _data: IConfig = {
-      title: {
-        caption: this.edtTitle.value || "",
-        color: this.edtTitleColor.value || ""
-      },
-      description: {
-        caption: this.edtDesc.value || "",
-        color: this.edtDescColor.value || ""
-      },
-      action: {
-        caption: this.edtButtonCaption.value || "",
-        captionColor: this.edtButtonCaptionColor.value || "",
-        color: this.edtButtonColor.value || "",
-        link: this.edtButtonLink.value || ""
-      },
-      background: this.backgroundData.base64
+      title: this.edtTitle.value || "",
+      description: this.edtDesc.value || "",
+      linkCaption: this.edtButtonCaption.value || "",
+      linkUrl: this.edtButtonLink.value || "",
+      backgroundImage: this.backgroundData.base64
     };
     return _data
   }
 
   set data(config: IConfig) {
-    this.edtTitle.value = config.title?.caption || "";
-    this.edtTitleColor.value = config.title?.color || "";
-    this.edtDesc.value = config.description?.caption || "";
-    this.edtDescColor.value = config.description?.color || "";
-    this.edtButtonCaption.value = config.action?.caption || "";
-    this.edtButtonLink.value = config.action?.link || "";
-    this.edtButtonCaptionColor.value = config.action?.captionColor || "";
-    this.edtButtonColor.value = config.action?.color || "";
-    if (config.background) {
-      this.edtBackground.preview(config.background);
-    }
-    if (!this.edtBackground.fileList.length && config.background)
+    this.edtTitle.value = config.title || "";
+    this.edtDesc.value = config.description || "";
+    this.edtButtonCaption.value = config.linkCaption || "";
+    this.edtButtonLink.value = config.linkUrl || "";
+    if (config.backgroundImage)
+      this.edtBackground.preview(config.backgroundImage);
+
+    if (!this.edtBackground.fileList.length && config.backgroundImage)
       this.edtBackground.fileList = [new File([], '')];
   }
 
@@ -91,8 +73,7 @@ export default class Config extends Module {
           <i-label caption=":"></i-label>
         </i-hstack>
         <i-input id="edtTitle" width="100%"></i-input>
-        <i-label caption="Title Font Color:"></i-label>
-        <i-input id="edtTitleColor" inputType="color" width="100px"></i-input>
+
         <i-label caption="Description:"></i-label>
         <i-input
           id="edtDesc"
@@ -102,14 +83,10 @@ export default class Config extends Module {
           resize="auto-grow"
           inputType='textarea'
         ></i-input>
-        <i-label caption="Description Font Color:"></i-label>
-        <i-input id="edtDescColor" inputType="color" width="100px"></i-input>
+
         <i-label caption="Link Button Caption"></i-label>
         <i-input id="edtButtonCaption" width="100%"></i-input>
-        <i-label caption="Link Button Color:"></i-label>
-        <i-input id="edtButtonColor" inputType="color" width="100px"></i-input>
-        <i-label caption="Link Button Caption Color:"></i-label>
-        <i-input id="edtButtonCaptionColor" inputType="color" width="100px"></i-input>
+
         <i-label caption="Link Button URL:"></i-label>
         <i-input id="edtButtonLink" width="100%"></i-input>
         <i-label caption="Backgound Image:"></i-label>

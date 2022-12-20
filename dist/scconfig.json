@@ -9,7 +9,8 @@
             "path": "main",
             "dependencies": [
                 "@banner/global",
-                "@banner/config"
+                "@banner/config",
+                "@banner/alert"
             ]
         },
         "@banner/global": {
@@ -21,6 +22,10 @@
             "dependencies": [
                 "@banner/global"
             ]
+        },
+        "@banner/alert": {
+            "path": "alert",
+            "dependencies": []
         }
     },
     "dependencies": {}
