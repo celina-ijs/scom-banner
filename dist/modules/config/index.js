@@ -51,7 +51,7 @@ define("@banner/config", ["require", "exports", "@ijstech/components", "@banner/
                 description: this.edtDesc.value || "",
                 linkCaption: this.edtButtonCaption.value || "",
                 linkUrl: this.edtButtonLink.value || "",
-                backgroundImage: this.backgroundData.base64
+                backgroundImage: this.edtBackgroundUrl.value || "" //this.backgroundData.base64
             };
             return _data;
         }
@@ -62,8 +62,9 @@ define("@banner/config", ["require", "exports", "@ijstech/components", "@banner/
             this.edtButtonLink.value = config.linkUrl || "";
             if (config.backgroundImage)
                 this.edtBackground.preview(config.backgroundImage);
-            if (!this.edtBackground.fileList.length && config.backgroundImage)
-                this.edtBackground.fileList = [new File([], '')];
+            // if (!this.edtBackground.fileList.length && config.backgroundImage)
+            //   this.edtBackground.fileList = [new File([], '')];
+            this.edtBackgroundUrl.value = config.backgroundImage;
         }
         onRemovedImage() {
             this.backgroundData.base64 = '';
@@ -87,8 +88,10 @@ define("@banner/config", ["require", "exports", "@ijstech/components", "@banner/
                 this.$render("i-input", { id: "edtButtonCaption", width: "100%" }),
                 this.$render("i-label", { caption: "Link Button URL:" }),
                 this.$render("i-input", { id: "edtButtonLink", width: "100%" }),
-                this.$render("i-label", { caption: "Backgound Image:" }),
-                this.$render("i-upload", { id: "edtBackground", maxHeight: 200, maxWidth: 200, class: config_css_1.uploadStyle, onChanged: this.onChangedImage.bind(this), onRemoved: () => this.onRemovedImage() })));
+                this.$render("i-label", { caption: "Backgound Image:", visible: false }),
+                this.$render("i-upload", { visible: false, id: "edtBackground", maxHeight: 200, maxWidth: 200, class: config_css_1.uploadStyle, onChanged: this.onChangedImage.bind(this), onRemoved: () => this.onRemovedImage() }),
+                this.$render("i-label", { caption: "Background image url" }),
+                this.$render("i-input", { id: "edtBackgroundUrl", width: "100%" })));
         }
     };
     Config = __decorate([
