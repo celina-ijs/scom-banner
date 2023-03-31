@@ -92,6 +92,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             this._oldData = { title: '' };
             this._data = { title: '' };
             this.oldTag = {};
+            this.tag = {};
             this.defaultEdit = true;
         }
         static async create(options, parent) {

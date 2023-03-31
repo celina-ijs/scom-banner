@@ -65,7 +65,7 @@ export default class ScomBanner extends Module implements PageBlock {
   private _oldData: IConfig = { title: '' };
   private _data: IConfig = { title: '' };
   private oldTag: any = {};
-  tag: any;
+  tag: any = {};
   defaultEdit: boolean = true;
   readonly onConfirm: () => Promise<void>;
   readonly onDiscard: () => Promise<void>;
