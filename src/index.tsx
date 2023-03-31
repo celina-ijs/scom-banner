@@ -109,6 +109,7 @@ export default class ScomBanner extends Module implements PageBlock {
   }
 
   async setData(data: IConfig) {
+    this._oldData = { ...this._data };
     this._data = data
     this.onUpdateBlock(this.tag)
   }
@@ -227,12 +228,12 @@ export default class ScomBanner extends Module implements PageBlock {
         command: (builder: any, userInputData: any) => {
           return {
             execute: async () => {
-              this._oldData = { ...this._data };
-              this.onUpdateBlock(this.tag);
+              if (builder?.setData) builder.setData(userInputData);
+              this.setData(userInputData);
             },
             undo: () => {
-              this._data = { ...this._oldData };
-              this.onUpdateBlock(this.tag);
+              if (builder?.setData) builder.setData(this._oldData);
+              this.setData(this._oldData);
             },
             redo: () => { }
           }

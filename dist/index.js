@@ -126,6 +126,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             return this._data;
         }
         async setData(data) {
+            this._oldData = Object.assign({}, this._data);
             this._data = data;
             this.onUpdateBlock(this.tag);
         }
@@ -231,12 +232,14 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                     command: (builder, userInputData) => {
                         return {
                             execute: async () => {
-                                this._oldData = Object.assign({}, this._data);
-                                this.onUpdateBlock(this.tag);
+                                if (builder === null || builder === void 0 ? void 0 : builder.setData)
+                                    builder.setData(userInputData);
+                                this.setData(userInputData);
                             },
                             undo: () => {
-                                this._data = Object.assign({}, this._oldData);
-                                this.onUpdateBlock(this.tag);
+                                if (builder === null || builder === void 0 ? void 0 : builder.setData)
+                                    builder.setData(this._oldData);
+                                this.setData(this._oldData);
                             },
                             redo: () => { }
                         };
