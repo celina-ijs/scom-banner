@@ -106,6 +106,16 @@ declare module "@scom/scom-banner" {
             };
             userInputDataSchema: IDataSchema;
         }[];
+        getActions(): {
+            name: string;
+            icon: string;
+            command: (builder: any, userInputData: any) => {
+                execute: () => Promise<void>;
+                undo: () => void;
+                redo: () => void;
+            };
+            userInputDataSchema: IDataSchema;
+        }[];
         _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema): {
             name: string;
             icon: string;
