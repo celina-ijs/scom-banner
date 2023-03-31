@@ -86,6 +86,28 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             }
         }
     };
+    const propertiesSchema = {
+        type: 'object',
+        properties: {
+            title: {
+                type: 'string',
+                minLength: 1,
+                required: true
+            },
+            description: {
+                type: 'string'
+            },
+            linkCaption: {
+                type: 'string'
+            },
+            linkUrl: {
+                type: 'string'
+            },
+            backgroundImage: {
+                type: 'string'
+            }
+        }
+    };
     let ScomBanner = class ScomBanner extends components_2.Module {
         constructor(parent, options) {
             super(parent, options);
@@ -133,28 +155,6 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         }
         async config() { }
         getEmbedderActions() {
-            const propertiesSchema = {
-                type: 'object',
-                properties: {
-                    title: {
-                        type: 'string',
-                        minLength: 1,
-                        required: true
-                    },
-                    description: {
-                        type: 'string'
-                    },
-                    linkCaption: {
-                        type: 'string'
-                    },
-                    linkUrl: {
-                        type: 'string'
-                    },
-                    backgroundImage: {
-                        type: 'string'
-                    }
-                }
-            };
             const themeSchema = {
                 type: 'object',
                 properties: {
@@ -186,6 +186,38 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                             'right'
                         ],
                         readOnly: true
+                    }
+                }
+            };
+            return this._getActions(propertiesSchema, themeSchema);
+        }
+        getActions() {
+            const themeSchema = {
+                type: 'object',
+                properties: {
+                    titleFontColor: {
+                        type: 'string',
+                        format: 'color'
+                    },
+                    descriptionFontColor: {
+                        type: 'string',
+                        format: 'color'
+                    },
+                    linkButtonCaptionColor: {
+                        type: 'string',
+                        format: 'color'
+                    },
+                    linkButtonColor: {
+                        type: 'string',
+                        format: 'color'
+                    },
+                    textAlign: {
+                        type: 'string',
+                        enum: [
+                            'left',
+                            'center',
+                            'right'
+                        ]
                     }
                 }
             };

@@ -44,6 +44,29 @@ const configSchema = {
   }
 }
 
+const propertiesSchema: IDataSchema = {
+  type: 'object',
+  properties: {
+    title: {
+      type: 'string',
+      minLength: 1,
+      required: true
+    },
+    description: {
+      type: 'string'
+    },
+    linkCaption: {
+      type: 'string'
+    },
+    linkUrl: {
+      type: 'string'
+    },
+    backgroundImage: {
+      type: 'string'
+    }
+  }
+};
+
 interface ScomBannerElement extends ControlElement {
   data: IConfig
 }
@@ -124,29 +147,6 @@ export default class ScomBanner extends Module implements PageBlock {
   async config() { }
 
   getEmbedderActions() {
-    const propertiesSchema: IDataSchema = {
-      type: 'object',
-      properties: {
-        title: {
-          type: 'string',
-          minLength: 1,
-          required: true
-        },
-        description: {
-          type: 'string'
-        },
-        linkCaption: {
-          type: 'string'
-        },
-        linkUrl: {
-          type: 'string'
-        },
-        backgroundImage: {
-          type: 'string'
-        }
-      }
-    };
-
     const themeSchema: IDataSchema = {
       type: 'object',
       properties: {
@@ -178,6 +178,40 @@ export default class ScomBanner extends Module implements PageBlock {
             'right'
           ],
           readOnly: true
+        }
+      }
+    }
+
+    return this._getActions(propertiesSchema, themeSchema);
+  }
+
+  getActions() {
+    const themeSchema: IDataSchema = {
+      type: 'object',
+      properties: {
+        titleFontColor: {
+          type: 'string',
+          format: 'color'
+        },
+        descriptionFontColor: {
+          type: 'string',
+          format: 'color'
+        },
+        linkButtonCaptionColor: {
+          type: 'string',
+          format: 'color'
+        },
+        linkButtonColor: {
+          type: 'string',
+          format: 'color'
+        },
+        textAlign: {
+          type: 'string',
+          enum: [
+            'left',
+            'center',
+            'right'
+          ]
         }
       }
     }
