@@ -284,7 +284,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                 ((_a = this._data) === null || _a === void 0 ? void 0 : _a.linkCaption) ? (this.$render("i-panel", null,
                     this.$render("i-button", { caption: this._data.linkCaption, padding: { left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem' }, onClick: () => { var _a; return ((_a = this._data) === null || _a === void 0 ? void 0 : _a.linkUrl) ? window.location.href = this._data.linkUrl : {}; }, font: { color: linkButtonCaptionColor }, background: { color: linkButtonColor }, class: index_css_1.actionButtonStyle }))) : this.$render("i-label", null)));
             mainStack.style.textAlign = textAlign || 'left';
-            const item = (this.$render("i-hstack", { background: { image: this._data.backgroundImage || '', color: 'transparent' }, minHeight: 500, verticalAlignment: "center", class: index_css_1.backgroundStyle }, mainStack));
+            const item = (this.$render("i-hstack", { background: { image: this._data.backgroundImage || '', color: 'transparent' }, verticalAlignment: "center", class: index_css_1.backgroundStyle }, mainStack));
             this.pnlCardBody.appendChild(item);
         }
         init() {
@@ -298,7 +298,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             return (this.$render("i-panel", { id: "pnlBlock" },
                 this.$render("i-panel", { id: "pnlCard" },
                     this.$render("i-hstack", { id: "pnlCardHeader", verticalAlignment: "center", horizontalAlignment: "center" }),
-                    this.$render("i-panel", { id: "pnlCardBody" }),
+                    this.$render("i-panel", { id: "pnlCardBody", minHeight: 48 }),
                     this.$render("i-panel", { id: "pnlCardFooter" }))));
         }
     };

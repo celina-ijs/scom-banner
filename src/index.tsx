@@ -306,7 +306,6 @@ export default class ScomBanner extends Module implements PageBlock {
     const item = (
       <i-hstack
         background={{ image: this._data.backgroundImage || '', color: 'transparent' }}
-        minHeight={500}
         verticalAlignment="center"
         class={backgroundStyle}
       >
@@ -333,7 +332,7 @@ export default class ScomBanner extends Module implements PageBlock {
             verticalAlignment="center"
             horizontalAlignment="center"
           />
-          <i-panel id="pnlCardBody" />
+          <i-panel id="pnlCardBody" minHeight={48} />
           <i-panel id="pnlCardFooter" />
         </i-panel>
       </i-panel>
