@@ -219,6 +219,9 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                             'center',
                             'right'
                         ]
+                    },
+                    height: {
+                        type: 'string'
                     }
                 }
             };
@@ -276,7 +279,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         }
         onUpdateBlock(config) {
             var _a;
-            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkButtonCaptionColor = Theme.colors.primary.contrastText, linkButtonColor = Theme.colors.primary.main, textAlign } = config || {};
+            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkButtonCaptionColor = Theme.colors.primary.contrastText, linkButtonColor = Theme.colors.primary.main, textAlign, height } = config || {};
             this.pnlCardBody.clearInnerHTML();
             const mainStack = (this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle, padding: { left: '1rem', right: '1rem' } },
                 this.$render("i-label", { caption: this._data.title, font: { size: '3rem', bold: true, color: titleFontColor }, lineHeight: 1.5 }),
@@ -284,7 +287,11 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                 ((_a = this._data) === null || _a === void 0 ? void 0 : _a.linkCaption) ? (this.$render("i-panel", null,
                     this.$render("i-button", { caption: this._data.linkCaption, padding: { left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem' }, onClick: () => { var _a; return ((_a = this._data) === null || _a === void 0 ? void 0 : _a.linkUrl) ? window.location.href = this._data.linkUrl : {}; }, font: { color: linkButtonCaptionColor }, background: { color: linkButtonColor }, class: index_css_1.actionButtonStyle }))) : this.$render("i-label", null)));
             mainStack.style.textAlign = textAlign || 'left';
-            const item = (this.$render("i-hstack", { background: { image: this._data.backgroundImage || '', color: 'transparent' }, verticalAlignment: "center", class: index_css_1.backgroundStyle }, mainStack));
+            const options = {};
+            if (height) {
+                options.height = height;
+            }
+            const item = (this.$render("i-hstack", Object.assign({ background: { image: this._data.backgroundImage || '', color: 'transparent' }, verticalAlignment: "center", class: index_css_1.backgroundStyle }, options), mainStack));
             this.pnlCardBody.appendChild(item);
         }
         init() {

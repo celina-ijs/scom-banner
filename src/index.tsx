@@ -213,6 +213,9 @@ export default class ScomBanner extends Module implements PageBlock {
             'center',
             'right'
           ]
+        },
+        height: {
+          type: 'string'
         }
       }
     }
@@ -271,7 +274,8 @@ export default class ScomBanner extends Module implements PageBlock {
       descriptionFontColor = Theme.text.primary,
       linkButtonCaptionColor = Theme.colors.primary.contrastText,
       linkButtonColor = Theme.colors.primary.main,
-      textAlign
+      textAlign,
+      height
     } = config || {};
     this.pnlCardBody.clearInnerHTML();
     const mainStack: Control = (
@@ -303,11 +307,16 @@ export default class ScomBanner extends Module implements PageBlock {
       </i-vstack>
     )
     mainStack.style.textAlign = textAlign || 'left';
+    const options: any = {};
+    if (height) {
+      options.height = height;
+    }
     const item = (
       <i-hstack
         background={{ image: this._data.backgroundImage || '', color: 'transparent' }}
         verticalAlignment="center"
         class={backgroundStyle}
+        { ...options }
       >
         {mainStack}
       </i-hstack>
