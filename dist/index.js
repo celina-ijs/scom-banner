@@ -281,7 +281,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             var _a;
             const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkButtonCaptionColor = Theme.colors.primary.contrastText, linkButtonColor = Theme.colors.primary.main, textAlign, height } = config || {};
             this.pnlCardBody.clearInnerHTML();
-            const mainStack = (this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle, padding: { left: '1rem', right: '1rem' } },
+            const mainStack = (this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle },
                 this.$render("i-label", { caption: this._data.title, font: { size: '3rem', bold: true, color: titleFontColor }, lineHeight: 1.5 }),
                 this.$render("i-label", { caption: this._data.description || '', font: { size: '1.375rem', color: descriptionFontColor }, lineHeight: 1.2 }),
                 ((_a = this._data) === null || _a === void 0 ? void 0 : _a.linkCaption) ? (this.$render("i-panel", null,

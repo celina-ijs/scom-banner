@@ -279,7 +279,7 @@ export default class ScomBanner extends Module implements PageBlock {
     } = config || {};
     this.pnlCardBody.clearInnerHTML();
     const mainStack: Control = (
-      <i-vstack gap="1.5rem" class={containerStyle} padding={{ left: '1rem', right: '1rem' }}>
+      <i-vstack gap="1.5rem" class={containerStyle}>
         <i-label
           caption={this._data.title}
           font={{ size: '3rem', bold: true, color: titleFontColor }}
