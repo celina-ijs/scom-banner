@@ -18,8 +18,7 @@ export const actionButtonStyle = Styles.style({
   boxShadow: 'none',
   $nest: {
     '&:hover': {
-      background: Theme.colors.primary.dark,
-      color: Theme.colors.primary.contrastText
+      filter: 'brightness(0.85)'
     },
     '> i-icon:hover': {
       fill: '#fff !important'

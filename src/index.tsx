@@ -55,14 +55,22 @@ const propertiesSchema: IDataSchema = {
     description: {
       type: 'string'
     },
-    linkCaption: {
-      type: 'string'
-    },
-    linkUrl: {
-      type: 'string'
-    },
     backgroundImage: {
       type: 'string'
+    },
+    linkButtons: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          caption: {
+            type: 'string'
+          },
+          url: {
+            type: 'string'
+          }
+        }
+      }
     }
   }
 };
@@ -156,25 +164,7 @@ export default class ScomBanner extends Module implements PageBlock {
           format: 'color',
           readOnly: true
         },
-        linkButtonType: {
-          type: 'string',
-          enum: [
-            'filled',
-            'outlined',
-            'text'
-          ]
-        },
         descriptionFontColor: {
-          type: 'string',
-          format: 'color',
-          readOnly: true
-        },
-        linkButtonCaptionColor: {
-          type: 'string',
-          format: 'color',
-          readOnly: true
-        },
-        linkButtonColor: {
           type: 'string',
           format: 'color',
           readOnly: true
@@ -187,6 +177,30 @@ export default class ScomBanner extends Module implements PageBlock {
             'right'
           ],
           readOnly: true
+        },
+        linkButtonStyle: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              captionColor: {
+                type: 'string',
+                format: 'color'
+              },
+              color: {
+                type: 'string',
+                format: 'color'
+              },
+              buttonType: {
+                type: 'string',
+                enum: [
+                  'filled',
+                  'outlined',
+                  'text'
+                ]
+              }
+            }
+          }
         }
       }
     }
@@ -206,22 +220,6 @@ export default class ScomBanner extends Module implements PageBlock {
           type: 'string',
           format: 'color'
         },
-        linkButtonCaptionColor: {
-          type: 'string',
-          format: 'color'
-        },
-        linkButtonColor: {
-          type: 'string',
-          format: 'color'
-        },
-        linkButtonType: {
-          type: 'string',
-          enum: [
-            'filled',
-            'outlined',
-            'text'
-          ]
-        },
         textAlign: {
           type: 'string',
           enum: [
@@ -232,6 +230,30 @@ export default class ScomBanner extends Module implements PageBlock {
         },
         height: {
           type: 'string'
+        },
+        linkButtonStyle: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              captionColor: {
+                type: 'string',
+                format: 'color'
+              },
+              color: {
+                type: 'string',
+                format: 'color'
+              },
+              buttonType: {
+                type: 'string',
+                enum: [
+                  'filled',
+                  'outlined',
+                  'text'
+                ]
+              }
+            }
+          }
         }
       }
     }
@@ -288,17 +310,11 @@ export default class ScomBanner extends Module implements PageBlock {
     const {
       titleFontColor = Theme.text.primary,
       descriptionFontColor = Theme.text.primary,
-      linkButtonCaptionColor = Theme.colors.primary.contrastText,
-      linkButtonColor = Theme.colors.primary.main,
-      linkButtonType = 'filled',
-      textAlign,
+      linkButtonStyle = [],
+      textAlign = 'left',
       height
     } = config || {};
     this.pnlCardBody.clearInnerHTML();
-    const buttonOptions: any = {};
-    if (linkButtonType === 'outlined') {
-      buttonOptions.border = { width: 1, style: 'solid', color: linkButtonColor };
-    }
     const mainStack: Control = (
       <i-vstack gap="1.5rem" class={containerStyle}>
         <i-label
@@ -307,27 +323,43 @@ export default class ScomBanner extends Module implements PageBlock {
           lineHeight={1.5}
         />
         <i-label
+          visible={!!this._data.description}
           caption={this._data.description || ''}
           font={{ size: '1.375rem', color: descriptionFontColor }}
           lineHeight={1.2}
         />
-        {
-          this._data?.linkCaption ? (
-            <i-panel>
-              <i-button
-                caption={this._data.linkCaption}
-                padding={{ left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem' }}
-                onClick={() => this._data?.linkUrl ? window.location.href = this._data.linkUrl : {}}
-                font={{ color: linkButtonCaptionColor }}
-                background={{ color: linkButtonType === 'filled' ? linkButtonColor : 'transparent' }}
-                class={actionButtonStyle}
-                { ...buttonOptions }
-              />
-            </i-panel>
-          ) : <i-label></i-label>
-        }
       </i-vstack>
     )
+    const buttons = this._data.linkButtons?.filter(link => link.caption || link.url);
+    if (buttons && buttons.length) {
+      const horizontalAlignment = textAlign == 'right' ? 'end' : textAlign == 'left' ? 'start' : textAlign;
+      let buttonPanel = (
+        <i-hstack verticalAlignment='center' horizontalAlignment={horizontalAlignment} gap="0.5rem"></i-hstack>
+      )
+      buttons.forEach((link, i) => {
+        const buttonOptions: any = {};
+        const {
+          captionColor = Theme.colors.primary.contrastText,
+          color = Theme.colors.primary.main,
+          buttonType = 'filled'
+        } = linkButtonStyle[i] || {}; 
+        if (buttonType === 'outlined') {
+          buttonOptions.border = { width: 1, style: 'solid', color: color };
+        }
+        buttonPanel.append(
+          <i-button
+            caption={link.caption || ""}
+            padding={{ left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem' }}
+            onClick={() => link.url ? window.location.href = link.url : {}}
+            font={{ color: captionColor }}
+            background={{ color: buttonType === 'filled' ? color : 'transparent' }}
+            class={actionButtonStyle}
+            {...buttonOptions}
+          />
+        )
+      })
+      mainStack.append(buttonPanel)
+    }
     mainStack.style.textAlign = textAlign || 'left';
     const options: any = {};
     if (height) {
@@ -338,7 +370,7 @@ export default class ScomBanner extends Module implements PageBlock {
         background={{ image: this._data.backgroundImage || '', color: 'transparent' }}
         verticalAlignment="center"
         class={backgroundStyle}
-        { ...options }
+        {...options}
       >
         {mainStack}
       </i-hstack>

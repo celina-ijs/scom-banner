@@ -43,8 +43,7 @@ define("@scom/scom-banner/index.css.ts", ["require", "exports", "@ijstech/compon
         boxShadow: 'none',
         $nest: {
             '&:hover': {
-                background: Theme.colors.primary.dark,
-                color: Theme.colors.primary.contrastText
+                filter: 'brightness(0.85)'
             },
             '> i-icon:hover': {
                 fill: '#fff !important'
@@ -97,14 +96,22 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             description: {
                 type: 'string'
             },
-            linkCaption: {
-                type: 'string'
-            },
-            linkUrl: {
-                type: 'string'
-            },
             backgroundImage: {
                 type: 'string'
+            },
+            linkButtons: {
+                type: 'array',
+                items: {
+                    type: 'object',
+                    properties: {
+                        caption: {
+                            type: 'string'
+                        },
+                        url: {
+                            type: 'string'
+                        }
+                    }
+                }
             }
         }
     };
@@ -164,25 +171,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                         format: 'color',
                         readOnly: true
                     },
-                    linkButtonType: {
-                        type: 'string',
-                        enum: [
-                            'filled',
-                            'outlined',
-                            'text'
-                        ]
-                    },
                     descriptionFontColor: {
-                        type: 'string',
-                        format: 'color',
-                        readOnly: true
-                    },
-                    linkButtonCaptionColor: {
-                        type: 'string',
-                        format: 'color',
-                        readOnly: true
-                    },
-                    linkButtonColor: {
                         type: 'string',
                         format: 'color',
                         readOnly: true
@@ -195,6 +184,30 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                             'right'
                         ],
                         readOnly: true
+                    },
+                    linkButtonStyle: {
+                        type: 'array',
+                        items: {
+                            type: 'object',
+                            properties: {
+                                captionColor: {
+                                    type: 'string',
+                                    format: 'color'
+                                },
+                                color: {
+                                    type: 'string',
+                                    format: 'color'
+                                },
+                                buttonType: {
+                                    type: 'string',
+                                    enum: [
+                                        'filled',
+                                        'outlined',
+                                        'text'
+                                    ]
+                                }
+                            }
+                        }
                     }
                 }
             };
@@ -212,22 +225,6 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                         type: 'string',
                         format: 'color'
                     },
-                    linkButtonCaptionColor: {
-                        type: 'string',
-                        format: 'color'
-                    },
-                    linkButtonColor: {
-                        type: 'string',
-                        format: 'color'
-                    },
-                    linkButtonType: {
-                        type: 'string',
-                        enum: [
-                            'filled',
-                            'outlined',
-                            'text'
-                        ]
-                    },
                     textAlign: {
                         type: 'string',
                         enum: [
@@ -238,6 +235,30 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                     },
                     height: {
                         type: 'string'
+                    },
+                    linkButtonStyle: {
+                        type: 'array',
+                        items: {
+                            type: 'object',
+                            properties: {
+                                captionColor: {
+                                    type: 'string',
+                                    format: 'color'
+                                },
+                                color: {
+                                    type: 'string',
+                                    format: 'color'
+                                },
+                                buttonType: {
+                                    type: 'string',
+                                    enum: [
+                                        'filled',
+                                        'outlined',
+                                        'text'
+                                    ]
+                                }
+                            }
+                        }
                     }
                 }
             };
@@ -295,17 +316,25 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         }
         onUpdateBlock(config) {
             var _a;
-            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkButtonCaptionColor = Theme.colors.primary.contrastText, linkButtonColor = Theme.colors.primary.main, linkButtonType = 'filled', textAlign, height } = config || {};
+            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkButtonStyle = [], textAlign = 'left', height } = config || {};
             this.pnlCardBody.clearInnerHTML();
-            const buttonOptions = {};
-            if (linkButtonType === 'outlined') {
-                buttonOptions.border = { width: 1, style: 'solid', color: linkButtonColor };
-            }
             const mainStack = (this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle },
                 this.$render("i-label", { caption: this._data.title, font: { size: '3rem', bold: true, color: titleFontColor }, lineHeight: 1.5 }),
-                this.$render("i-label", { caption: this._data.description || '', font: { size: '1.375rem', color: descriptionFontColor }, lineHeight: 1.2 }),
-                ((_a = this._data) === null || _a === void 0 ? void 0 : _a.linkCaption) ? (this.$render("i-panel", null,
-                    this.$render("i-button", Object.assign({ caption: this._data.linkCaption, padding: { left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem' }, onClick: () => { var _a; return ((_a = this._data) === null || _a === void 0 ? void 0 : _a.linkUrl) ? window.location.href = this._data.linkUrl : {}; }, font: { color: linkButtonCaptionColor }, background: { color: linkButtonType === 'filled' ? linkButtonColor : 'transparent' }, class: index_css_1.actionButtonStyle }, buttonOptions)))) : this.$render("i-label", null)));
+                this.$render("i-label", { visible: !!this._data.description, caption: this._data.description || '', font: { size: '1.375rem', color: descriptionFontColor }, lineHeight: 1.2 })));
+            const buttons = (_a = this._data.linkButtons) === null || _a === void 0 ? void 0 : _a.filter(link => link.caption || link.url);
+            if (buttons && buttons.length) {
+                const horizontalAlignment = textAlign == 'right' ? 'end' : textAlign == 'left' ? 'start' : textAlign;
+                let buttonPanel = (this.$render("i-hstack", { verticalAlignment: 'center', horizontalAlignment: horizontalAlignment, gap: "0.5rem" }));
+                buttons.forEach((link, i) => {
+                    const buttonOptions = {};
+                    const { captionColor = Theme.colors.primary.contrastText, color = Theme.colors.primary.main, buttonType = 'filled' } = linkButtonStyle[i] || {};
+                    if (buttonType === 'outlined') {
+                        buttonOptions.border = { width: 1, style: 'solid', color: color };
+                    }
+                    buttonPanel.append(this.$render("i-button", Object.assign({ caption: link.caption || "", padding: { left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem' }, onClick: () => link.url ? window.location.href = link.url : {}, font: { color: captionColor }, background: { color: buttonType === 'filled' ? color : 'transparent' }, class: index_css_1.actionButtonStyle }, buttonOptions)));
+                });
+                mainStack.append(buttonPanel);
+            }
             mainStack.style.textAlign = textAlign || 'left';
             const options = {};
             if (height) {

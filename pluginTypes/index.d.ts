@@ -3,9 +3,12 @@ declare module "@scom/scom-banner/global/utils.ts" {
     export interface IConfig {
         title: string;
         description?: string;
-        linkCaption?: string;
-        linkUrl?: string;
         backgroundImage?: string;
+        linkButtons?: ILinkButton[];
+    }
+    export interface ILinkButton {
+        caption?: string;
+        url?: string;
     }
 }
 /// <amd-module name="@scom/scom-banner/global/index.ts" />
