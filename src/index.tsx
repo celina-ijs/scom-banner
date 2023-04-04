@@ -156,6 +156,14 @@ export default class ScomBanner extends Module implements PageBlock {
           format: 'color',
           readOnly: true
         },
+        linkButtonType: {
+          type: 'string',
+          enum: [
+            'filled',
+            'outlined',
+            'text'
+          ]
+        },
         descriptionFontColor: {
           type: 'string',
           format: 'color',
@@ -205,6 +213,14 @@ export default class ScomBanner extends Module implements PageBlock {
         linkButtonColor: {
           type: 'string',
           format: 'color'
+        },
+        linkButtonType: {
+          type: 'string',
+          enum: [
+            'filled',
+            'outlined',
+            'text'
+          ]
         },
         textAlign: {
           type: 'string',
@@ -274,10 +290,15 @@ export default class ScomBanner extends Module implements PageBlock {
       descriptionFontColor = Theme.text.primary,
       linkButtonCaptionColor = Theme.colors.primary.contrastText,
       linkButtonColor = Theme.colors.primary.main,
+      linkButtonType = 'filled',
       textAlign,
       height
     } = config || {};
     this.pnlCardBody.clearInnerHTML();
+    const buttonOptions: any = {};
+    if (linkButtonType === 'outlined') {
+      buttonOptions.border = { width: 1, style: 'solid', color: linkButtonColor };
+    }
     const mainStack: Control = (
       <i-vstack gap="1.5rem" class={containerStyle}>
         <i-label
@@ -298,8 +319,9 @@ export default class ScomBanner extends Module implements PageBlock {
                 padding={{ left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem' }}
                 onClick={() => this._data?.linkUrl ? window.location.href = this._data.linkUrl : {}}
                 font={{ color: linkButtonCaptionColor }}
-                background={{ color: linkButtonColor }}
+                background={{ color: linkButtonType === 'filled' ? linkButtonColor : 'transparent' }}
                 class={actionButtonStyle}
+                { ...buttonOptions }
               />
             </i-panel>
           ) : <i-label></i-label>

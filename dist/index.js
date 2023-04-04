@@ -164,6 +164,14 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                         format: 'color',
                         readOnly: true
                     },
+                    linkButtonType: {
+                        type: 'string',
+                        enum: [
+                            'filled',
+                            'outlined',
+                            'text'
+                        ]
+                    },
                     descriptionFontColor: {
                         type: 'string',
                         format: 'color',
@@ -211,6 +219,14 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                     linkButtonColor: {
                         type: 'string',
                         format: 'color'
+                    },
+                    linkButtonType: {
+                        type: 'string',
+                        enum: [
+                            'filled',
+                            'outlined',
+                            'text'
+                        ]
                     },
                     textAlign: {
                         type: 'string',
@@ -279,13 +295,17 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         }
         onUpdateBlock(config) {
             var _a;
-            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkButtonCaptionColor = Theme.colors.primary.contrastText, linkButtonColor = Theme.colors.primary.main, textAlign, height } = config || {};
+            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkButtonCaptionColor = Theme.colors.primary.contrastText, linkButtonColor = Theme.colors.primary.main, linkButtonType = 'filled', textAlign, height } = config || {};
             this.pnlCardBody.clearInnerHTML();
+            const buttonOptions = {};
+            if (linkButtonType === 'outlined') {
+                buttonOptions.border = { width: 1, style: 'solid', color: linkButtonColor };
+            }
             const mainStack = (this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle },
                 this.$render("i-label", { caption: this._data.title, font: { size: '3rem', bold: true, color: titleFontColor }, lineHeight: 1.5 }),
                 this.$render("i-label", { caption: this._data.description || '', font: { size: '1.375rem', color: descriptionFontColor }, lineHeight: 1.2 }),
                 ((_a = this._data) === null || _a === void 0 ? void 0 : _a.linkCaption) ? (this.$render("i-panel", null,
-                    this.$render("i-button", { caption: this._data.linkCaption, padding: { left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem' }, onClick: () => { var _a; return ((_a = this._data) === null || _a === void 0 ? void 0 : _a.linkUrl) ? window.location.href = this._data.linkUrl : {}; }, font: { color: linkButtonCaptionColor }, background: { color: linkButtonColor }, class: index_css_1.actionButtonStyle }))) : this.$render("i-label", null)));
+                    this.$render("i-button", Object.assign({ caption: this._data.linkCaption, padding: { left: '1rem', right: '1rem', top: '0.5rem', bottom: '0.5rem' }, onClick: () => { var _a; return ((_a = this._data) === null || _a === void 0 ? void 0 : _a.linkUrl) ? window.location.href = this._data.linkUrl : {}; }, font: { color: linkButtonCaptionColor }, background: { color: linkButtonType === 'filled' ? linkButtonColor : 'transparent' }, class: index_css_1.actionButtonStyle }, buttonOptions)))) : this.$render("i-label", null)));
             mainStack.style.textAlign = textAlign || 'left';
             const options = {};
             if (height) {
