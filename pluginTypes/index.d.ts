@@ -5,6 +5,8 @@ declare module "@scom/scom-banner/global/utils.ts" {
         description?: string;
         backgroundImage?: string;
         linkButtons?: ILinkButton[];
+        showHeader?: boolean;
+        showFooter?: boolean;
     }
     export interface ILinkButton {
         caption?: string;
@@ -43,6 +45,8 @@ declare module "@scom/scom-banner" {
     import { PageBlock, IConfig } from "@scom/scom-banner/global/index.ts";
     interface ScomBannerElement extends ControlElement {
         data: IConfig;
+        showHeader?: boolean;
+        showFooter?: boolean;
     }
     global {
         namespace JSX {
@@ -54,6 +58,7 @@ declare module "@scom/scom-banner" {
     export default class ScomBanner extends Module implements PageBlock {
         private pnlCard;
         private pnlCardBody;
+        private dappContainer;
         private _oldData;
         private _data;
         private oldTag;
@@ -64,10 +69,16 @@ declare module "@scom/scom-banner" {
         readonly onEdit: () => Promise<void>;
         static create(options?: ScomBannerElement, parent?: Container): Promise<ScomBanner>;
         constructor(parent?: Container, options?: ScomBannerElement);
+        get showFooter(): boolean;
+        set showFooter(value: boolean);
+        get showHeader(): boolean;
+        set showHeader(value: boolean);
         getData(): IConfig;
         setData(data: IConfig): Promise<void>;
         getTag(): any;
+        private updateTag;
         setTag(value: any): Promise<void>;
+        setTheme(value: string): void;
         getConfigSchema(): {
             type: string;
             required: any[];

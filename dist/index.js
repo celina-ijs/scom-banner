@@ -129,20 +129,63 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             await self.ready();
             return self;
         }
+        get showFooter() {
+            var _a;
+            return (_a = this._data.showFooter) !== null && _a !== void 0 ? _a : true;
+        }
+        set showFooter(value) {
+            this._data.showFooter = value;
+            if (this.dappContainer)
+                this.dappContainer.showFooter = this.showFooter;
+        }
+        get showHeader() {
+            var _a;
+            return (_a = this._data.showHeader) !== null && _a !== void 0 ? _a : true;
+        }
+        set showHeader(value) {
+            this._data.showHeader = value;
+            if (this.dappContainer)
+                this.dappContainer.showHeader = this.showHeader;
+        }
         getData() {
             return this._data;
         }
         async setData(data) {
+            var _a;
             this._oldData = Object.assign({}, this._data);
             this._data = data;
+            const containerData = {
+                showWalletNetwork: false,
+                showFooter: this.showFooter,
+                showHeader: this.showHeader
+            };
+            if ((_a = this.dappContainer) === null || _a === void 0 ? void 0 : _a.setData)
+                this.dappContainer.setData(containerData);
             this.onUpdateBlock(this.tag);
         }
         getTag() {
             return this.tag;
         }
+        updateTag(type, value) {
+            var _a;
+            this.tag[type] = (_a = this.tag[type]) !== null && _a !== void 0 ? _a : {};
+            for (let prop in value) {
+                if (value.hasOwnProperty(prop))
+                    this.tag[type][prop] = value[prop];
+            }
+        }
         async setTag(value) {
-            this.tag = value;
+            const newValue = value || {};
+            if (newValue.light)
+                this.updateTag('light', newValue.light);
+            if (newValue.dark)
+                this.updateTag('dark', newValue.dark);
+            if (this.dappContainer)
+                this.dappContainer.setTag(this.tag);
             this.onUpdateBlock(value);
+        }
+        setTheme(value) {
+            this.onUpdateBlock(this.tag);
         }
         getConfigSchema() {
             return configSchema;
@@ -166,15 +209,83 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             const themeSchema = {
                 type: 'object',
                 properties: {
-                    titleFontColor: {
-                        type: 'string',
-                        format: 'color',
-                        readOnly: true
+                    dark: {
+                        type: 'object',
+                        properties: {
+                            titleFontColor: {
+                                type: 'string',
+                                format: 'color',
+                                readOnly: true
+                            },
+                            descriptionFontColor: {
+                                type: 'string',
+                                format: 'color',
+                                readOnly: true
+                            },
+                            linkButtonStyle: {
+                                type: 'array',
+                                items: {
+                                    type: 'object',
+                                    properties: {
+                                        captionColor: {
+                                            type: 'string',
+                                            format: 'color'
+                                        },
+                                        color: {
+                                            type: 'string',
+                                            format: 'color'
+                                        },
+                                        buttonType: {
+                                            type: 'string',
+                                            enum: [
+                                                'filled',
+                                                'outlined',
+                                                'text'
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    descriptionFontColor: {
-                        type: 'string',
-                        format: 'color',
-                        readOnly: true
+                    light: {
+                        type: 'object',
+                        properties: {
+                            titleFontColor: {
+                                type: 'string',
+                                format: 'color',
+                                readOnly: true
+                            },
+                            descriptionFontColor: {
+                                type: 'string',
+                                format: 'color',
+                                readOnly: true
+                            },
+                            linkButtonStyle: {
+                                type: 'array',
+                                items: {
+                                    type: 'object',
+                                    properties: {
+                                        captionColor: {
+                                            type: 'string',
+                                            format: 'color'
+                                        },
+                                        color: {
+                                            type: 'string',
+                                            format: 'color'
+                                        },
+                                        buttonType: {
+                                            type: 'string',
+                                            enum: [
+                                                'filled',
+                                                'outlined',
+                                                'text'
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
                     textAlign: {
                         type: 'string',
@@ -184,30 +295,6 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                             'right'
                         ],
                         readOnly: true
-                    },
-                    linkButtonStyle: {
-                        type: 'array',
-                        items: {
-                            type: 'object',
-                            properties: {
-                                captionColor: {
-                                    type: 'string',
-                                    format: 'color'
-                                },
-                                color: {
-                                    type: 'string',
-                                    format: 'color'
-                                },
-                                buttonType: {
-                                    type: 'string',
-                                    enum: [
-                                        'filled',
-                                        'outlined',
-                                        'text'
-                                    ]
-                                }
-                            }
-                        }
                     }
                 }
             };
@@ -217,13 +304,79 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             const themeSchema = {
                 type: 'object',
                 properties: {
-                    titleFontColor: {
-                        type: 'string',
-                        format: 'color'
+                    dark: {
+                        type: 'object',
+                        properties: {
+                            titleFontColor: {
+                                type: 'string',
+                                format: 'color'
+                            },
+                            descriptionFontColor: {
+                                type: 'string',
+                                format: 'color'
+                            },
+                            linkButtonStyle: {
+                                type: 'array',
+                                items: {
+                                    type: 'object',
+                                    properties: {
+                                        captionColor: {
+                                            type: 'string',
+                                            format: 'color'
+                                        },
+                                        color: {
+                                            type: 'string',
+                                            format: 'color'
+                                        },
+                                        buttonType: {
+                                            type: 'string',
+                                            enum: [
+                                                'filled',
+                                                'outlined',
+                                                'text'
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    descriptionFontColor: {
-                        type: 'string',
-                        format: 'color'
+                    light: {
+                        type: 'object',
+                        properties: {
+                            titleFontColor: {
+                                type: 'string',
+                                format: 'color'
+                            },
+                            descriptionFontColor: {
+                                type: 'string',
+                                format: 'color'
+                            },
+                            linkButtonStyle: {
+                                type: 'array',
+                                items: {
+                                    type: 'object',
+                                    properties: {
+                                        captionColor: {
+                                            type: 'string',
+                                            format: 'color'
+                                        },
+                                        color: {
+                                            type: 'string',
+                                            format: 'color'
+                                        },
+                                        buttonType: {
+                                            type: 'string',
+                                            enum: [
+                                                'filled',
+                                                'outlined',
+                                                'text'
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
                     textAlign: {
                         type: 'string',
@@ -235,30 +388,6 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                     },
                     height: {
                         type: 'string'
-                    },
-                    linkButtonStyle: {
-                        type: 'array',
-                        items: {
-                            type: 'object',
-                            properties: {
-                                captionColor: {
-                                    type: 'string',
-                                    format: 'color'
-                                },
-                                color: {
-                                    type: 'string',
-                                    format: 'color'
-                                },
-                                buttonType: {
-                                    type: 'string',
-                                    enum: [
-                                        'filled',
-                                        'outlined',
-                                        'text'
-                                    ]
-                                }
-                            }
-                        }
                     }
                 }
             };
@@ -295,16 +424,23 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                                 if (!userInputData)
                                     return;
                                 this.oldTag = Object.assign({}, this.tag);
-                                this.setTag(userInputData);
                                 if (builder)
                                     builder.setTag(userInputData);
+                                else
+                                    this.setTag(userInputData);
+                                if (this.dappContainer)
+                                    this.dappContainer.setTag(userInputData);
                             },
                             undo: () => {
                                 if (!userInputData)
                                     return;
-                                this.setTag(this.oldTag);
+                                this.tag = Object.assign({}, this.oldTag);
                                 if (builder)
-                                    builder.setTag(this.oldTag);
+                                    builder.setTag(this.tag);
+                                else
+                                    this.setTag(this.oldTag);
+                                if (this.dappContainer)
+                                    this.dappContainer.setTag(this.oldTag);
                             },
                             redo: () => { }
                         };
@@ -315,13 +451,15 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             return actions;
         }
         onUpdateBlock(config) {
-            var _a;
-            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkButtonStyle = [], textAlign = 'left', height } = config || {};
+            var _a, _b;
+            const themeVar = ((_a = this.dappContainer) === null || _a === void 0 ? void 0 : _a.theme) || 'light';
+            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkButtonStyle = [] } = config[themeVar] || {};
+            const { textAlign = 'left', height } = config || {};
             this.pnlCardBody.clearInnerHTML();
             const mainStack = (this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle },
                 this.$render("i-label", { caption: this._data.title, font: { size: '3rem', bold: true, color: titleFontColor }, lineHeight: 1.5 }),
                 this.$render("i-label", { visible: !!this._data.description, caption: this._data.description || '', font: { size: '1.375rem', color: descriptionFontColor }, lineHeight: 1.2 })));
-            const buttons = (_a = this._data.linkButtons) === null || _a === void 0 ? void 0 : _a.filter(link => link.caption || link.url);
+            const buttons = (_b = this._data.linkButtons) === null || _b === void 0 ? void 0 : _b.filter(link => link.caption || link.url);
             if (buttons && buttons.length) {
                 const horizontalAlignment = textAlign == 'right' ? 'end' : textAlign == 'left' ? 'start' : textAlign;
                 let buttonPanel = (this.$render("i-hstack", { verticalAlignment: 'center', horizontalAlignment: horizontalAlignment, gap: "0.5rem" }));
@@ -351,7 +489,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             }
         }
         render() {
-            return (this.$render("i-panel", { id: "pnlBlock" },
+            return (this.$render("i-scom-dapp-container", { id: "dappContainer" },
                 this.$render("i-panel", { id: "pnlCard" },
                     this.$render("i-hstack", { id: "pnlCardHeader", verticalAlignment: "center", horizontalAlignment: "center" }),
                     this.$render("i-panel", { id: "pnlCardBody", minHeight: 48 }),

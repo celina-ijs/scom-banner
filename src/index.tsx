@@ -9,7 +9,10 @@ import {
   Container,
   IDataSchema
 } from '@ijstech/components';
+import { } from '@ijstech/eth-contract';
+import { } from '@ijstech/eth-wallet';
 import { PageBlock, IConfig } from './global/index';
+import ScomDappContainer from "@scom/scom-dapp-container";
 import { containerStyle, backgroundStyle, actionButtonStyle } from './index.css';
 const Theme = Styles.Theme.ThemeVars;
 
@@ -76,7 +79,9 @@ const propertiesSchema: IDataSchema = {
 };
 
 interface ScomBannerElement extends ControlElement {
-  data: IConfig
+  data: IConfig;
+  showHeader?: boolean;
+  showFooter?: boolean;
 }
 
 declare global {
@@ -92,6 +97,7 @@ declare global {
 export default class ScomBanner extends Module implements PageBlock {
   private pnlCard: Panel;
   private pnlCardBody: Panel;
+  private dappContainer: ScomDappContainer;
 
   private _oldData: IConfig = { title: '' };
   private _data: IConfig = { title: '' };
@@ -112,6 +118,22 @@ export default class ScomBanner extends Module implements PageBlock {
     super(parent, options);
   }
 
+  get showFooter() {
+    return this._data.showFooter ?? true
+  }
+  set showFooter(value: boolean) {
+    this._data.showFooter = value
+    if (this.dappContainer) this.dappContainer.showFooter = this.showFooter;
+  }
+
+  get showHeader() {
+    return this._data.showHeader ?? true
+  }
+  set showHeader(value: boolean) {
+    this._data.showHeader = value
+    if (this.dappContainer) this.dappContainer.showHeader = this.showHeader;
+  }
+
   getData() {
     return this._data
   }
@@ -119,6 +141,12 @@ export default class ScomBanner extends Module implements PageBlock {
   async setData(data: IConfig) {
     this._oldData = { ...this._data };
     this._data = data
+    const containerData: any = {
+      showWalletNetwork: false,
+      showFooter: this.showFooter,
+      showHeader: this.showHeader
+    }
+    if (this.dappContainer?.setData) this.dappContainer.setData(containerData)
     this.onUpdateBlock(this.tag)
   }
 
@@ -126,9 +154,25 @@ export default class ScomBanner extends Module implements PageBlock {
     return this.tag
   }
 
+  private updateTag(type: 'light'|'dark', value: any) {
+    this.tag[type] = this.tag[type] ?? {};
+    for (let prop in value) {
+      if (value.hasOwnProperty(prop))
+        this.tag[type][prop] = value[prop];
+    }
+  }
+
   async setTag(value: any) {
-    this.tag = value;
+    const newValue = value || {};
+    if (newValue.light) this.updateTag('light', newValue.light);
+    if (newValue.dark) this.updateTag('dark', newValue.dark);
+    if (this.dappContainer)
+      this.dappContainer.setTag(this.tag);
     this.onUpdateBlock(value);
+  }
+
+  setTheme(value: string) {
+    this.onUpdateBlock(this.tag);
   }
 
   getConfigSchema() {
@@ -159,15 +203,83 @@ export default class ScomBanner extends Module implements PageBlock {
     const themeSchema: IDataSchema = {
       type: 'object',
       properties: {
-        titleFontColor: {
-          type: 'string',
-          format: 'color',
-          readOnly: true
+        dark: {
+          type: 'object',
+          properties: {
+            titleFontColor: {
+              type: 'string',
+              format: 'color',
+              readOnly: true
+            },
+            descriptionFontColor: {
+              type: 'string',
+              format: 'color',
+              readOnly: true
+            },
+            linkButtonStyle: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  captionColor: {
+                    type: 'string',
+                    format: 'color'
+                  },
+                  color: {
+                    type: 'string',
+                    format: 'color'
+                  },
+                  buttonType: {
+                    type: 'string',
+                    enum: [
+                      'filled',
+                      'outlined',
+                      'text'
+                    ]
+                  }
+                }
+              }
+            }
+          }
         },
-        descriptionFontColor: {
-          type: 'string',
-          format: 'color',
-          readOnly: true
+        light: {
+          type: 'object',
+          properties: {
+            titleFontColor: {
+              type: 'string',
+              format: 'color',
+              readOnly: true
+            },
+            descriptionFontColor: {
+              type: 'string',
+              format: 'color',
+              readOnly: true
+            },
+            linkButtonStyle: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  captionColor: {
+                    type: 'string',
+                    format: 'color'
+                  },
+                  color: {
+                    type: 'string',
+                    format: 'color'
+                  },
+                  buttonType: {
+                    type: 'string',
+                    enum: [
+                      'filled',
+                      'outlined',
+                      'text'
+                    ]
+                  }
+                }
+              }
+            }
+          }
         },
         textAlign: {
           type: 'string',
@@ -177,30 +289,6 @@ export default class ScomBanner extends Module implements PageBlock {
             'right'
           ],
           readOnly: true
-        },
-        linkButtonStyle: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              captionColor: {
-                type: 'string',
-                format: 'color'
-              },
-              color: {
-                type: 'string',
-                format: 'color'
-              },
-              buttonType: {
-                type: 'string',
-                enum: [
-                  'filled',
-                  'outlined',
-                  'text'
-                ]
-              }
-            }
-          }
         }
       }
     }
@@ -212,13 +300,79 @@ export default class ScomBanner extends Module implements PageBlock {
     const themeSchema: IDataSchema = {
       type: 'object',
       properties: {
-        titleFontColor: {
-          type: 'string',
-          format: 'color'
+        dark: {
+          type: 'object',
+          properties: {
+            titleFontColor: {
+              type: 'string',
+              format: 'color'
+            },
+            descriptionFontColor: {
+              type: 'string',
+              format: 'color'
+            },
+            linkButtonStyle: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  captionColor: {
+                    type: 'string',
+                    format: 'color'
+                  },
+                  color: {
+                    type: 'string',
+                    format: 'color'
+                  },
+                  buttonType: {
+                    type: 'string',
+                    enum: [
+                      'filled',
+                      'outlined',
+                      'text'
+                    ]
+                  }
+                }
+              }
+            }
+          }
         },
-        descriptionFontColor: {
-          type: 'string',
-          format: 'color'
+        light: {
+          type: 'object',
+          properties: {
+            titleFontColor: {
+              type: 'string',
+              format: 'color'
+            },
+            descriptionFontColor: {
+              type: 'string',
+              format: 'color'
+            },
+            linkButtonStyle: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  captionColor: {
+                    type: 'string',
+                    format: 'color'
+                  },
+                  color: {
+                    type: 'string',
+                    format: 'color'
+                  },
+                  buttonType: {
+                    type: 'string',
+                    enum: [
+                      'filled',
+                      'outlined',
+                      'text'
+                    ]
+                  }
+                }
+              }
+            }
+          }
         },
         textAlign: {
           type: 'string',
@@ -230,30 +384,6 @@ export default class ScomBanner extends Module implements PageBlock {
         },
         height: {
           type: 'string'
-        },
-        linkButtonStyle: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              captionColor: {
-                type: 'string',
-                format: 'color'
-              },
-              color: {
-                type: 'string',
-                format: 'color'
-              },
-              buttonType: {
-                type: 'string',
-                enum: [
-                  'filled',
-                  'outlined',
-                  'text'
-                ]
-              }
-            }
-          }
         }
       }
     }
@@ -289,13 +419,16 @@ export default class ScomBanner extends Module implements PageBlock {
             execute: async () => {
               if (!userInputData) return;
               this.oldTag = { ...this.tag };
-              this.setTag(userInputData);
               if (builder) builder.setTag(userInputData);
+              else this.setTag(userInputData);
+              if (this.dappContainer) this.dappContainer.setTag(userInputData);
             },
             undo: () => {
               if (!userInputData) return;
-              this.setTag(this.oldTag);
-              if (builder) builder.setTag(this.oldTag);
+              this.tag = { ...this.oldTag };
+              if (builder) builder.setTag(this.tag);
+              else this.setTag(this.oldTag);
+              if (this.dappContainer) this.dappContainer.setTag(this.oldTag);
             },
             redo: () => { }
           }
@@ -307,10 +440,13 @@ export default class ScomBanner extends Module implements PageBlock {
   }
 
   onUpdateBlock(config: any) {
+    const themeVar = this.dappContainer?.theme || 'light';
     const {
       titleFontColor = Theme.text.primary,
       descriptionFontColor = Theme.text.primary,
-      linkButtonStyle = [],
+      linkButtonStyle = []
+    } = config[themeVar] || {};
+    const {
       textAlign = 'left',
       height
     } = config || {};
@@ -388,7 +524,7 @@ export default class ScomBanner extends Module implements PageBlock {
 
   render() {
     return (
-      <i-panel id="pnlBlock">
+      <i-scom-dapp-container id="dappContainer">
         <i-panel id="pnlCard">
           <i-hstack
             id="pnlCardHeader"
@@ -398,7 +534,7 @@ export default class ScomBanner extends Module implements PageBlock {
           <i-panel id="pnlCardBody" minHeight={48} />
           <i-panel id="pnlCardFooter" />
         </i-panel>
-      </i-panel>
+      </i-scom-dapp-container>
     )
   }
 }

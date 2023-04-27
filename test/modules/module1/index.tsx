@@ -18,12 +18,20 @@ export default class Module1 extends Module {
                 data={{
                     title: 'Title',
                     description: 'Description',
-                    backgroundImage: assets.fullPath('img/background.png')
+                    backgroundImage: assets.fullPath('img/background.png'),
+                    showFooter: false
                 }}
                 tag={{
-                    titleFontColor: '#FF9933',
-                    descriptionFontColor: '#fff',
-                    textAlign: 'center'
+                    light: {
+                        titleFontColor: '#FF9933',
+                        descriptionFontColor: '#ddd',
+                        textAlign: 'center'
+                    },
+                    dark: {
+                        titleFontColor: '#FF9933',
+                        descriptionFontColor: '#fff',
+                        textAlign: 'center'
+                    }
                 }}
             />
         </i-panel>
