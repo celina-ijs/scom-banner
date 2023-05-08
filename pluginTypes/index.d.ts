@@ -78,6 +78,7 @@ declare module "@scom/scom-banner" {
         private getTag;
         private updateTag;
         private setTag;
+        private setTheme;
         private getEmbedderActions;
         private getActions;
         private _getActions;
@@ -89,7 +90,6 @@ declare module "@scom/scom-banner" {
             setData: any;
             getTag: any;
             setTag: any;
-            setTheme: (value: string) => void;
         }[];
         private onUpdateBlock;
         init(): void;

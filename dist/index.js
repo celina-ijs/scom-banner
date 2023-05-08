@@ -188,6 +188,9 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                 this.dappContainer.setTag(this.tag);
             this.onUpdateBlock(value);
         }
+        setTheme(value) {
+            this.onUpdateBlock(this.tag);
+        }
         // getConfigSchema() {
         //   return configSchema;
         // }
@@ -460,10 +463,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                     getData: this.getData.bind(this),
                     setData: this.setData.bind(this),
                     getTag: this.getTag.bind(this),
-                    setTag: this.setTag.bind(this),
-                    setTheme: (value) => {
-                        this.onUpdateBlock(this.tag);
-                    }
+                    setTag: this.setTag.bind(this)
                 },
                 {
                     name: 'Emdedder Configurator',
@@ -472,10 +472,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                     getData: this.getData.bind(this),
                     setData: this.setData.bind(this),
                     getTag: this.getTag.bind(this),
-                    setTag: this.setTag.bind(this),
-                    setTheme: (value) => {
-                        this.onUpdateBlock(this.tag);
-                    }
+                    setTag: this.setTag.bind(this)
                 }
             ];
         }

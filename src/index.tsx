@@ -173,6 +173,10 @@ export default class ScomBanner extends Module {
     this.onUpdateBlock(value);
   }
 
+  private setTheme(value: string) {
+    this.onUpdateBlock(this.tag);
+  }
+
   // getConfigSchema() {
   //   return configSchema;
   // }
@@ -446,10 +450,7 @@ export default class ScomBanner extends Module {
         getData: this.getData.bind(this),
         setData: this.setData.bind(this),
         getTag: this.getTag.bind(this),
-        setTag: this.setTag.bind(this),
-        setTheme: (value: string) => {
-          this.onUpdateBlock(this.tag);
-        }
+        setTag: this.setTag.bind(this)
       },
       {
         name: 'Emdedder Configurator',
@@ -458,10 +459,7 @@ export default class ScomBanner extends Module {
         getData: this.getData.bind(this),
         setData: this.setData.bind(this),
         getTag: this.getTag.bind(this),
-        setTag: this.setTag.bind(this),
-        setTheme: (value: string) => {
-          this.onUpdateBlock(this.tag);
-        }
+        setTag: this.setTag.bind(this)
       }
     ]
   }
