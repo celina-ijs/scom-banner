@@ -41,8 +41,8 @@ declare module "@scom/scom-banner/index.css.ts" {
 }
 /// <amd-module name="@scom/scom-banner" />
 declare module "@scom/scom-banner" {
-    import { Module, ControlElement, Container, IDataSchema } from '@ijstech/components';
-    import { PageBlock, IConfig } from "@scom/scom-banner/global/index.ts";
+    import { Module, ControlElement, Container } from '@ijstech/components';
+    import { IConfig } from "@scom/scom-banner/global/index.ts";
     interface ScomBannerElement extends ControlElement {
         data: IConfig;
         showHeader?: boolean;
@@ -55,7 +55,7 @@ declare module "@scom/scom-banner" {
             }
         }
     }
-    export default class ScomBanner extends Module implements PageBlock {
+    export default class ScomBanner extends Module {
         private pnlCard;
         private pnlCardBody;
         private dappContainer;
@@ -73,74 +73,25 @@ declare module "@scom/scom-banner" {
         set showFooter(value: boolean);
         get showHeader(): boolean;
         set showHeader(value: boolean);
-        getData(): IConfig;
-        setData(data: IConfig): Promise<void>;
-        getTag(): any;
+        private getData;
+        private setData;
+        private getTag;
         private updateTag;
-        setTag(value: any): Promise<void>;
-        setTheme(value: string): void;
-        getConfigSchema(): {
-            type: string;
-            required: any[];
-            properties: {
-                titleFontColor: {
-                    type: string;
-                    format: string;
-                };
-                descriptionFontColor: {
-                    type: string;
-                    format: string;
-                };
-                linkButtonCaptionColor: {
-                    type: string;
-                    format: string;
-                };
-                linkButtonColor: {
-                    type: string;
-                    format: string;
-                };
-                textAlign: {
-                    type: string;
-                    enum: string[];
-                };
-            };
-        };
-        onConfigSave(config: any): void;
-        edit(): Promise<void>;
-        confirm(): Promise<void>;
-        discard(): Promise<void>;
-        config(): Promise<void>;
-        getEmbedderActions(): {
+        private setTag;
+        private getEmbedderActions;
+        private getActions;
+        private _getActions;
+        getConfigurators(): {
             name: string;
-            icon: string;
-            command: (builder: any, userInputData: any) => {
-                execute: () => Promise<void>;
-                undo: () => void;
-                redo: () => void;
-            };
-            userInputDataSchema: IDataSchema;
+            target: string;
+            getActions: any;
+            getData: any;
+            setData: any;
+            getTag: any;
+            setTag: any;
+            setTheme: (value: string) => void;
         }[];
-        getActions(): {
-            name: string;
-            icon: string;
-            command: (builder: any, userInputData: any) => {
-                execute: () => Promise<void>;
-                undo: () => void;
-                redo: () => void;
-            };
-            userInputDataSchema: IDataSchema;
-        }[];
-        _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema): {
-            name: string;
-            icon: string;
-            command: (builder: any, userInputData: any) => {
-                execute: () => Promise<void>;
-                undo: () => void;
-                redo: () => void;
-            };
-            userInputDataSchema: IDataSchema;
-        }[];
-        onUpdateBlock(config: any): void;
+        private onUpdateBlock;
         init(): void;
         render(): any;
     }

@@ -11,41 +11,41 @@ import {
 } from '@ijstech/components';
 import { } from '@ijstech/eth-contract';
 import { } from '@ijstech/eth-wallet';
-import { PageBlock, IConfig } from './global/index';
+import { IConfig } from './global/index';
 import ScomDappContainer from "@scom/scom-dapp-container";
 import { containerStyle, backgroundStyle, actionButtonStyle } from './index.css';
 const Theme = Styles.Theme.ThemeVars;
 
-const configSchema = {
-  type: 'object',
-  required: [],
-  properties: {
-    titleFontColor: {
-      type: 'string',
-      format: 'color'
-    },
-    descriptionFontColor: {
-      type: 'string',
-      format: 'color'
-    },
-    linkButtonCaptionColor: {
-      type: 'string',
-      format: 'color'
-    },
-    linkButtonColor: {
-      type: 'string',
-      format: 'color'
-    },
-    textAlign: {
-      type: 'string',
-      enum: [
-        'left',
-        'center',
-        'right'
-      ]
-    }
-  }
-}
+// const configSchema = {
+//   type: 'object',
+//   required: [],
+//   properties: {
+//     titleFontColor: {
+//       type: 'string',
+//       format: 'color'
+//     },
+//     descriptionFontColor: {
+//       type: 'string',
+//       format: 'color'
+//     },
+//     linkButtonCaptionColor: {
+//       type: 'string',
+//       format: 'color'
+//     },
+//     linkButtonColor: {
+//       type: 'string',
+//       format: 'color'
+//     },
+//     textAlign: {
+//       type: 'string',
+//       enum: [
+//         'left',
+//         'center',
+//         'right'
+//       ]
+//     }
+//   }
+// }
 
 const propertiesSchema: IDataSchema = {
   type: 'object',
@@ -94,7 +94,7 @@ declare global {
 
 @customModule
 @customElements('i-scom-banner')
-export default class ScomBanner extends Module implements PageBlock {
+export default class ScomBanner extends Module {
   private pnlCard: Panel;
   private pnlCardBody: Panel;
   private dappContainer: ScomDappContainer;
@@ -134,11 +134,11 @@ export default class ScomBanner extends Module implements PageBlock {
     if (this.dappContainer) this.dappContainer.showHeader = this.showHeader;
   }
 
-  getData() {
+  private getData() {
     return this._data
   }
 
-  async setData(data: IConfig) {
+  private async setData(data: IConfig) {
     this._oldData = { ...this._data };
     this._data = data
     const containerData: any = {
@@ -150,7 +150,7 @@ export default class ScomBanner extends Module implements PageBlock {
     this.onUpdateBlock(this.tag)
   }
 
-  getTag() {
+  private getTag() {
     return this.tag
   }
 
@@ -162,44 +162,42 @@ export default class ScomBanner extends Module implements PageBlock {
     }
   }
 
-  async setTag(value: any) {
+  private async setTag(value: any) {
     const newValue = value || {};
     if (newValue.light) this.updateTag('light', newValue.light);
     if (newValue.dark) this.updateTag('dark', newValue.dark);
+    if (newValue.hasOwnProperty('height')) this.tag.height = newValue.height;
+    if (newValue.hasOwnProperty('textAlign')) this.tag.textAlign = newValue.textAlign;
     if (this.dappContainer)
       this.dappContainer.setTag(this.tag);
     this.onUpdateBlock(value);
   }
 
-  setTheme(value: string) {
-    this.onUpdateBlock(this.tag);
-  }
+  // getConfigSchema() {
+  //   return configSchema;
+  // }
 
-  getConfigSchema() {
-    return configSchema;
-  }
+  // onConfigSave(config: any) {
+  //   this.tag = config;
+  //   this.onUpdateBlock(config);
+  // }
 
-  onConfigSave(config: any) {
-    this.tag = config;
-    this.onUpdateBlock(config);
-  }
+  // async edit() {
+  //   // this.pnlCard.visible = false
+  // }
 
-  async edit() {
-    // this.pnlCard.visible = false
-  }
+  // async confirm() {
+  //   this.onUpdateBlock(this.tag)
+  //   // this.pnlCard.visible = true
+  // }
 
-  async confirm() {
-    this.onUpdateBlock(this.tag)
-    // this.pnlCard.visible = true
-  }
+  // async discard() {
+  //   // this.pnlCard.visible = true
+  // }
 
-  async discard() {
-    // this.pnlCard.visible = true
-  }
+  // async config() { }
 
-  async config() { }
-
-  getEmbedderActions() {
+  private getEmbedderActions() {
     const themeSchema: IDataSchema = {
       type: 'object',
       properties: {
@@ -296,7 +294,7 @@ export default class ScomBanner extends Module implements PageBlock {
     return this._getActions(propertiesSchema, themeSchema);
   }
 
-  getActions() {
+  private getActions() {
     const themeSchema: IDataSchema = {
       type: 'object',
       properties: {
@@ -391,7 +389,7 @@ export default class ScomBanner extends Module implements PageBlock {
     return this._getActions(propertiesSchema, themeSchema);
   }
 
-  _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
+  private _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
     const actions = [
       {
         name: 'Settings',
@@ -418,14 +416,14 @@ export default class ScomBanner extends Module implements PageBlock {
           return {
             execute: async () => {
               if (!userInputData) return;
-              this.oldTag = { ...this.tag };
+              this.oldTag = JSON.parse(JSON.stringify(this.tag));
               if (builder) builder.setTag(userInputData);
               else this.setTag(userInputData);
               if (this.dappContainer) this.dappContainer.setTag(userInputData);
             },
             undo: () => {
               if (!userInputData) return;
-              this.tag = { ...this.oldTag };
+              this.tag = JSON.parse(JSON.stringify(this.oldTag));
               if (builder) builder.setTag(this.tag);
               else this.setTag(this.oldTag);
               if (this.dappContainer) this.dappContainer.setTag(this.oldTag);
@@ -439,7 +437,36 @@ export default class ScomBanner extends Module implements PageBlock {
     return actions
   }
 
-  onUpdateBlock(config: any) {
+  getConfigurators() {
+    return [
+      {
+        name: 'Builder Configurator',
+        target: 'Builders',
+        getActions: this.getActions.bind(this),
+        getData: this.getData.bind(this),
+        setData: this.setData.bind(this),
+        getTag: this.getTag.bind(this),
+        setTag: this.setTag.bind(this),
+        setTheme: (value: string) => {
+          this.onUpdateBlock(this.tag);
+        }
+      },
+      {
+        name: 'Emdedder Configurator',
+        target: 'Embedders',
+        getActions: this.getEmbedderActions.bind(this),
+        getData: this.getData.bind(this),
+        setData: this.setData.bind(this),
+        getTag: this.getTag.bind(this),
+        setTag: this.setTag.bind(this),
+        setTheme: (value: string) => {
+          this.onUpdateBlock(this.tag);
+        }
+      }
+    ]
+  }
+
+  private onUpdateBlock(config: any) {
     const themeVar = this.dappContainer?.theme || 'light';
     const {
       titleFontColor = Theme.text.primary,
@@ -454,7 +481,7 @@ export default class ScomBanner extends Module implements PageBlock {
     const mainStack: Control = (
       <i-vstack gap="1.5rem" class={containerStyle}>
         <i-label
-          caption={this._data.title}
+          caption={this._data?.title || ''}
           font={{ size: '3rem', bold: true, color: titleFontColor }}
           lineHeight={1.5}
         />
@@ -517,9 +544,7 @@ export default class ScomBanner extends Module implements PageBlock {
   init() {
     super.init();
     const data = this.getAttribute('data', true);
-    if (data) {
-      this.setData(data);
-    }
+    data && this.setData(data);
   }
 
   render() {
