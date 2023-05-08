@@ -55,36 +55,36 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const Theme = components_2.Styles.Theme.ThemeVars;
-    const configSchema = {
-        type: 'object',
-        required: [],
-        properties: {
-            titleFontColor: {
-                type: 'string',
-                format: 'color'
-            },
-            descriptionFontColor: {
-                type: 'string',
-                format: 'color'
-            },
-            linkButtonCaptionColor: {
-                type: 'string',
-                format: 'color'
-            },
-            linkButtonColor: {
-                type: 'string',
-                format: 'color'
-            },
-            textAlign: {
-                type: 'string',
-                enum: [
-                    'left',
-                    'center',
-                    'right'
-                ]
-            }
-        }
-    };
+    // const configSchema = {
+    //   type: 'object',
+    //   required: [],
+    //   properties: {
+    //     titleFontColor: {
+    //       type: 'string',
+    //       format: 'color'
+    //     },
+    //     descriptionFontColor: {
+    //       type: 'string',
+    //       format: 'color'
+    //     },
+    //     linkButtonCaptionColor: {
+    //       type: 'string',
+    //       format: 'color'
+    //     },
+    //     linkButtonColor: {
+    //       type: 'string',
+    //       format: 'color'
+    //     },
+    //     textAlign: {
+    //       type: 'string',
+    //       enum: [
+    //         'left',
+    //         'center',
+    //         'right'
+    //       ]
+    //     }
+    //   }
+    // }
     const propertiesSchema = {
         type: 'object',
         properties: {
@@ -180,6 +180,10 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                 this.updateTag('light', newValue.light);
             if (newValue.dark)
                 this.updateTag('dark', newValue.dark);
+            if (newValue.hasOwnProperty('height'))
+                this.tag.height = newValue.height;
+            if (newValue.hasOwnProperty('textAlign'))
+                this.tag.textAlign = newValue.textAlign;
             if (this.dappContainer)
                 this.dappContainer.setTag(this.tag);
             this.onUpdateBlock(value);
@@ -187,24 +191,24 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         setTheme(value) {
             this.onUpdateBlock(this.tag);
         }
-        getConfigSchema() {
-            return configSchema;
-        }
-        onConfigSave(config) {
-            this.tag = config;
-            this.onUpdateBlock(config);
-        }
-        async edit() {
-            // this.pnlCard.visible = false
-        }
-        async confirm() {
-            this.onUpdateBlock(this.tag);
-            // this.pnlCard.visible = true
-        }
-        async discard() {
-            // this.pnlCard.visible = true
-        }
-        async config() { }
+        // getConfigSchema() {
+        //   return configSchema;
+        // }
+        // onConfigSave(config: any) {
+        //   this.tag = config;
+        //   this.onUpdateBlock(config);
+        // }
+        // async edit() {
+        //   // this.pnlCard.visible = false
+        // }
+        // async confirm() {
+        //   this.onUpdateBlock(this.tag)
+        //   // this.pnlCard.visible = true
+        // }
+        // async discard() {
+        //   // this.pnlCard.visible = true
+        // }
+        // async config() { }
         getEmbedderActions() {
             const themeSchema = {
                 type: 'object',
@@ -423,7 +427,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                             execute: async () => {
                                 if (!userInputData)
                                     return;
-                                this.oldTag = Object.assign({}, this.tag);
+                                this.oldTag = JSON.parse(JSON.stringify(this.tag));
                                 if (builder)
                                     builder.setTag(userInputData);
                                 else
@@ -434,7 +438,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                             undo: () => {
                                 if (!userInputData)
                                     return;
-                                this.tag = Object.assign({}, this.oldTag);
+                                this.tag = JSON.parse(JSON.stringify(this.oldTag));
                                 if (builder)
                                     builder.setTag(this.tag);
                                 else
@@ -450,16 +454,38 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             ];
             return actions;
         }
+        getConfigurators() {
+            return [
+                {
+                    name: 'Builder Configurator',
+                    target: 'Builders',
+                    getActions: this.getActions.bind(this),
+                    getData: this.getData.bind(this),
+                    setData: this.setData.bind(this),
+                    getTag: this.getTag.bind(this),
+                    setTag: this.setTag.bind(this)
+                },
+                {
+                    name: 'Emdedder Configurator',
+                    target: 'Embedders',
+                    getActions: this.getEmbedderActions.bind(this),
+                    getData: this.getData.bind(this),
+                    setData: this.setData.bind(this),
+                    getTag: this.getTag.bind(this),
+                    setTag: this.setTag.bind(this)
+                }
+            ];
+        }
         onUpdateBlock(config) {
-            var _a, _b;
+            var _a, _b, _c;
             const themeVar = ((_a = this.dappContainer) === null || _a === void 0 ? void 0 : _a.theme) || 'light';
             const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkButtonStyle = [] } = config[themeVar] || {};
             const { textAlign = 'left', height } = config || {};
             this.pnlCardBody.clearInnerHTML();
             const mainStack = (this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle },
-                this.$render("i-label", { caption: this._data.title, font: { size: '3rem', bold: true, color: titleFontColor }, lineHeight: 1.5 }),
+                this.$render("i-label", { caption: ((_b = this._data) === null || _b === void 0 ? void 0 : _b.title) || '', font: { size: '3rem', bold: true, color: titleFontColor }, lineHeight: 1.5 }),
                 this.$render("i-label", { visible: !!this._data.description, caption: this._data.description || '', font: { size: '1.375rem', color: descriptionFontColor }, lineHeight: 1.2 })));
-            const buttons = (_b = this._data.linkButtons) === null || _b === void 0 ? void 0 : _b.filter(link => link.caption || link.url);
+            const buttons = (_c = this._data.linkButtons) === null || _c === void 0 ? void 0 : _c.filter(link => link.caption || link.url);
             if (buttons && buttons.length) {
                 const horizontalAlignment = textAlign == 'right' ? 'end' : textAlign == 'left' ? 'start' : textAlign;
                 let buttonPanel = (this.$render("i-hstack", { verticalAlignment: 'center', horizontalAlignment: horizontalAlignment, gap: "0.5rem" }));
@@ -484,9 +510,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         init() {
             super.init();
             const data = this.getAttribute('data', true);
-            if (data) {
-                this.setData(data);
-            }
+            data && this.setData(data);
         }
         render() {
             return (this.$render("i-scom-dapp-container", { id: "dappContainer" },
