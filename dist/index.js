@@ -99,7 +99,6 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         constructor(parent, options) {
             super(parent, options);
             this._data = { title: '' };
-            this.oldTag = {};
             this.tag = {};
             this.defaultEdit = true;
         }
@@ -108,37 +107,11 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             await self.ready();
             return self;
         }
-        get showFooter() {
-            var _a;
-            return (_a = this._data.showFooter) !== null && _a !== void 0 ? _a : false;
-        }
-        set showFooter(value) {
-            this._data.showFooter = value;
-            if (this.dappContainer)
-                this.dappContainer.showFooter = this.showFooter;
-        }
-        get showHeader() {
-            var _a;
-            return (_a = this._data.showHeader) !== null && _a !== void 0 ? _a : false;
-        }
-        set showHeader(value) {
-            this._data.showHeader = value;
-            if (this.dappContainer)
-                this.dappContainer.showHeader = this.showHeader;
-        }
         getData() {
             return this._data;
         }
         async setData(data) {
-            var _a;
             this._data = data;
-            const containerData = {
-                showWalletNetwork: false,
-                showFooter: this.showFooter,
-                showHeader: this.showHeader
-            };
-            if ((_a = this.dappContainer) === null || _a === void 0 ? void 0 : _a.setData)
-                this.dappContainer.setData(containerData);
             this.onUpdateBlock(this.tag);
         }
         getTag() {
@@ -162,8 +135,6 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                 this.tag.height = newValue.height;
             if (newValue.hasOwnProperty('textAlign'))
                 this.tag.textAlign = newValue.textAlign;
-            if (this.dappContainer)
-                this.dappContainer.setTag(this.tag);
             this.onUpdateBlock(value);
         }
         setTheme(value) {
@@ -259,6 +230,9 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                             'right'
                         ],
                         readOnly
+                    },
+                    height: {
+                        type: 'number'
                     }
                 }
             };
@@ -311,8 +285,6 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                                     builder.setTag(userInputData);
                                 else
                                     this.setTag(userInputData);
-                                if (this.dappContainer)
-                                    this.dappContainer.setTag(userInputData);
                             },
                             undo: () => {
                                 if (!userInputData)
@@ -321,8 +293,6 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                                     builder.setTag(oldTag);
                                 else
                                     this.setTag(oldTag);
-                                if (this.dappContainer)
-                                    this.dappContainer.setTag(oldTag);
                             },
                             redo: () => { }
                         };
@@ -364,15 +334,15 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             ];
         }
         onUpdateBlock(config) {
-            var _a, _b, _c;
-            const themeVar = ((_a = this.dappContainer) === null || _a === void 0 ? void 0 : _a.theme) || 'light';
+            var _a, _b;
+            const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
             const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkButtonStyle = [] } = config[themeVar] || {};
             const { textAlign = 'left', height = 'auto' } = config || {};
             this.pnlCardBody.clearInnerHTML();
             const mainStack = (this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle },
-                this.$render("i-label", { caption: ((_b = this._data) === null || _b === void 0 ? void 0 : _b.title) || '', font: { size: '3rem', bold: true, color: titleFontColor }, lineHeight: 1.5 }),
+                this.$render("i-label", { caption: ((_a = this._data) === null || _a === void 0 ? void 0 : _a.title) || '', font: { size: '3rem', bold: true, color: titleFontColor }, lineHeight: 1.5 }),
                 this.$render("i-label", { visible: !!this._data.description, caption: this._data.description || '', font: { size: '1.375rem', color: descriptionFontColor }, lineHeight: 1.2 })));
-            const buttons = (_c = this._data.linkButtons) === null || _c === void 0 ? void 0 : _c.filter(link => link.caption || link.url);
+            const buttons = (_b = this._data.linkButtons) === null || _b === void 0 ? void 0 : _b.filter(link => link.caption || link.url);
             if (buttons && buttons.length) {
                 const horizontalAlignment = textAlign == 'right' ? 'end' : textAlign == 'left' ? 'start' : textAlign;
                 let buttonPanel = (this.$render("i-hstack", { verticalAlignment: 'center', horizontalAlignment: horizontalAlignment, gap: "0.5rem" }));
@@ -400,11 +370,10 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             data && this.setData(data);
         }
         render() {
-            return (this.$render("i-scom-dapp-container", { id: "dappContainer" },
-                this.$render("i-panel", { id: "pnlCard" },
-                    this.$render("i-hstack", { id: "pnlCardHeader", verticalAlignment: "center", horizontalAlignment: "center" }),
-                    this.$render("i-panel", { id: "pnlCardBody", minHeight: 48 }),
-                    this.$render("i-panel", { id: "pnlCardFooter" }))));
+            return (this.$render("i-panel", { id: "pnlCard" },
+                this.$render("i-hstack", { id: "pnlCardHeader", verticalAlignment: "center", horizontalAlignment: "center" }),
+                this.$render("i-panel", { id: "pnlCardBody", minHeight: 48 }),
+                this.$render("i-panel", { id: "pnlCardFooter" })));
         }
     };
     ScomBanner = __decorate([

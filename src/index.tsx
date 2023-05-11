@@ -50,8 +50,6 @@ const propertiesSchema: IDataSchema = {
 
 interface ScomBannerElement extends ControlElement {
   data: IConfig;
-  showHeader?: boolean;
-  showFooter?: boolean;
 }
 
 declare global {
@@ -66,10 +64,8 @@ declare global {
 @customElements('i-scom-banner')
 export default class ScomBanner extends Module {
   private pnlCardBody: Panel;
-  private dappContainer: ScomDappContainer;
 
   private _data: IConfig = { title: '' };
-  private oldTag: any = {};
   tag: any = {};
   defaultEdit: boolean = true;
   readonly onConfirm: () => Promise<void>;
@@ -86,34 +82,12 @@ export default class ScomBanner extends Module {
     super(parent, options);
   }
 
-  get showFooter() {
-    return this._data.showFooter ?? false
-  }
-  set showFooter(value: boolean) {
-    this._data.showFooter = value
-    if (this.dappContainer) this.dappContainer.showFooter = this.showFooter;
-  }
-
-  get showHeader() {
-    return this._data.showHeader ?? false
-  }
-  set showHeader(value: boolean) {
-    this._data.showHeader = value
-    if (this.dappContainer) this.dappContainer.showHeader = this.showHeader;
-  }
-
   private getData() {
     return this._data
   }
 
   private async setData(data: IConfig) {
     this._data = data
-    const containerData: any = {
-      showWalletNetwork: false,
-      showFooter: this.showFooter,
-      showHeader: this.showHeader
-    }
-    if (this.dappContainer?.setData) this.dappContainer.setData(containerData)
     this.onUpdateBlock(this.tag)
   }
 
@@ -135,8 +109,6 @@ export default class ScomBanner extends Module {
     if (newValue.dark) this.updateTag('dark', newValue.dark);
     if (newValue.hasOwnProperty('height')) this.tag.height = newValue.height;
     if (newValue.hasOwnProperty('textAlign')) this.tag.textAlign = newValue.textAlign;
-    if (this.dappContainer)
-      this.dappContainer.setTag(this.tag);
     this.onUpdateBlock(value);
   }
 
@@ -234,6 +206,9 @@ export default class ScomBanner extends Module {
             'right'
           ],
           readOnly
+        },
+        height: {
+          type: 'number'
         }
       }
     }
@@ -279,13 +254,11 @@ export default class ScomBanner extends Module {
               oldTag = JSON.parse(JSON.stringify(this.tag));
               if (builder) builder.setTag(userInputData);
               else this.setTag(userInputData);
-              if (this.dappContainer) this.dappContainer.setTag(userInputData);
             },
             undo: () => {
               if (!userInputData) return;
               if (builder) builder.setTag(oldTag);
               else this.setTag(oldTag);
-              if (this.dappContainer) this.dappContainer.setTag(oldTag);
             },
             redo: () => { }
           }
@@ -329,7 +302,7 @@ export default class ScomBanner extends Module {
   }
 
   private onUpdateBlock(config: any) {
-    const themeVar = this.dappContainer?.theme || 'light';
+    const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
     const {
       titleFontColor = Theme.text.primary,
       descriptionFontColor = Theme.text.primary,
@@ -412,17 +385,15 @@ export default class ScomBanner extends Module {
 
   render() {
     return (
-      <i-scom-dapp-container id="dappContainer">
-        <i-panel id="pnlCard">
-          <i-hstack
-            id="pnlCardHeader"
-            verticalAlignment="center"
-            horizontalAlignment="center"
-          />
-          <i-panel id="pnlCardBody" minHeight={48} />
-          <i-panel id="pnlCardFooter" />
-        </i-panel>
-      </i-scom-dapp-container>
+      <i-panel id="pnlCard">
+        <i-hstack
+          id="pnlCardHeader"
+          verticalAlignment="center"
+          horizontalAlignment="center"
+        />
+        <i-panel id="pnlCardBody" minHeight={48} />
+        <i-panel id="pnlCardFooter" />
+      </i-panel>
     )
   }
 }
