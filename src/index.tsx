@@ -17,37 +17,6 @@ import { containerStyle, backgroundStyle, actionButtonStyle } from './index.css'
 import dataJson from './data.json';
 const Theme = Styles.Theme.ThemeVars;
 
-// const configSchema = {
-//   type: 'object',
-//   required: [],
-//   properties: {
-//     titleFontColor: {
-//       type: 'string',
-//       format: 'color'
-//     },
-//     descriptionFontColor: {
-//       type: 'string',
-//       format: 'color'
-//     },
-//     linkButtonCaptionColor: {
-//       type: 'string',
-//       format: 'color'
-//     },
-//     linkButtonColor: {
-//       type: 'string',
-//       format: 'color'
-//     },
-//     textAlign: {
-//       type: 'string',
-//       enum: [
-//         'left',
-//         'center',
-//         'right'
-//       ]
-//     }
-//   }
-// }
-
 const propertiesSchema: IDataSchema = {
   type: 'object',
   properties: {
@@ -96,11 +65,9 @@ declare global {
 @customModule
 @customElements('i-scom-banner')
 export default class ScomBanner extends Module {
-  private pnlCard: Panel;
   private pnlCardBody: Panel;
   private dappContainer: ScomDappContainer;
 
-  private _oldData: IConfig = { title: '' };
   private _data: IConfig = { title: '' };
   private oldTag: any = {};
   tag: any = {};
@@ -120,7 +87,7 @@ export default class ScomBanner extends Module {
   }
 
   get showFooter() {
-    return this._data.showFooter ?? true
+    return this._data.showFooter ?? false
   }
   set showFooter(value: boolean) {
     this._data.showFooter = value
@@ -128,7 +95,7 @@ export default class ScomBanner extends Module {
   }
 
   get showHeader() {
-    return this._data.showHeader ?? true
+    return this._data.showHeader ?? false
   }
   set showHeader(value: boolean) {
     this._data.showHeader = value
@@ -140,7 +107,6 @@ export default class ScomBanner extends Module {
   }
 
   private async setData(data: IConfig) {
-    this._oldData = { ...this._data };
     this._data = data
     const containerData: any = {
       showWalletNetwork: false,
@@ -178,31 +144,7 @@ export default class ScomBanner extends Module {
     this.onUpdateBlock(this.tag);
   }
 
-  // getConfigSchema() {
-  //   return configSchema;
-  // }
-
-  // onConfigSave(config: any) {
-  //   this.tag = config;
-  //   this.onUpdateBlock(config);
-  // }
-
-  // async edit() {
-  //   // this.pnlCard.visible = false
-  // }
-
-  // async confirm() {
-  //   this.onUpdateBlock(this.tag)
-  //   // this.pnlCard.visible = true
-  // }
-
-  // async discard() {
-  //   // this.pnlCard.visible = true
-  // }
-
-  // async config() { }
-
-  private getEmbedderActions() {
+  private getThemeSchema(readOnly = false) {
     const themeSchema: IDataSchema = {
       type: 'object',
       properties: {
@@ -212,12 +154,12 @@ export default class ScomBanner extends Module {
             titleFontColor: {
               type: 'string',
               format: 'color',
-              readOnly: true
+              readOnly
             },
             descriptionFontColor: {
               type: 'string',
               format: 'color',
-              readOnly: true
+              readOnly
             },
             linkButtonStyle: {
               type: 'array',
@@ -251,12 +193,12 @@ export default class ScomBanner extends Module {
             titleFontColor: {
               type: 'string',
               format: 'color',
-              readOnly: true
+              readOnly
             },
             descriptionFontColor: {
               type: 'string',
               format: 'color',
-              readOnly: true
+              readOnly
             },
             linkButtonStyle: {
               type: 'array',
@@ -291,107 +233,12 @@ export default class ScomBanner extends Module {
             'center',
             'right'
           ],
-          readOnly: true
+          readOnly
         }
       }
     }
 
-    return this._getActions(propertiesSchema, themeSchema);
-  }
-
-  private getActions() {
-    const themeSchema: IDataSchema = {
-      type: 'object',
-      properties: {
-        dark: {
-          type: 'object',
-          properties: {
-            titleFontColor: {
-              type: 'string',
-              format: 'color'
-            },
-            descriptionFontColor: {
-              type: 'string',
-              format: 'color'
-            },
-            linkButtonStyle: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  captionColor: {
-                    type: 'string',
-                    format: 'color'
-                  },
-                  color: {
-                    type: 'string',
-                    format: 'color'
-                  },
-                  buttonType: {
-                    type: 'string',
-                    enum: [
-                      'filled',
-                      'outlined',
-                      'text'
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        light: {
-          type: 'object',
-          properties: {
-            titleFontColor: {
-              type: 'string',
-              format: 'color'
-            },
-            descriptionFontColor: {
-              type: 'string',
-              format: 'color'
-            },
-            linkButtonStyle: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  captionColor: {
-                    type: 'string',
-                    format: 'color'
-                  },
-                  color: {
-                    type: 'string',
-                    format: 'color'
-                  },
-                  buttonType: {
-                    type: 'string',
-                    enum: [
-                      'filled',
-                      'outlined',
-                      'text'
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        textAlign: {
-          type: 'string',
-          enum: [
-            'left',
-            'center',
-            'right'
-          ]
-        },
-        height: {
-          type: 'string'
-        }
-      }
-    }
-
-    return this._getActions(propertiesSchema, themeSchema);
+    return themeSchema;
   }
 
   private _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
@@ -400,14 +247,21 @@ export default class ScomBanner extends Module {
         name: 'Settings',
         icon: 'cog',
         command: (builder: any, userInputData: any) => {
+          let oldData = {};
           return {
             execute: async () => {
-              if (builder?.setData) builder.setData(userInputData);
-              this.setData(userInputData);
+              oldData = JSON.parse(JSON.stringify(this._data))
+              if (userInputData?.title !== undefined) this._data.title = userInputData.title;
+              if (userInputData?.description !== undefined) this._data.description = userInputData.description;
+              if (userInputData?.backgroundImage !== undefined) this._data.backgroundImage = userInputData.backgroundImage;
+              if (userInputData?.linkButtons !== undefined) this._data.linkButtons = userInputData.linkButtons;
+              this.onUpdateBlock(this.tag);
+              if (builder?.setData) builder.setData(this._data);
             },
-            undo: () => {
-              if (builder?.setData) builder.setData(this._oldData);
-              this.setData(this._oldData);
+            undo: async () => {
+              this._data = JSON.parse(JSON.stringify(oldData))
+              this.onUpdateBlock(this.tag);
+              if (builder?.setData) builder.setData(this._data);
             },
             redo: () => { }
           }
@@ -418,20 +272,20 @@ export default class ScomBanner extends Module {
         name: 'Theme Settings',
         icon: 'palette',
         command: (builder: any, userInputData: any) => {
+          let oldTag = {};
           return {
             execute: async () => {
               if (!userInputData) return;
-              this.oldTag = JSON.parse(JSON.stringify(this.tag));
+              oldTag = JSON.parse(JSON.stringify(this.tag));
               if (builder) builder.setTag(userInputData);
               else this.setTag(userInputData);
               if (this.dappContainer) this.dappContainer.setTag(userInputData);
             },
             undo: () => {
               if (!userInputData) return;
-              this.tag = JSON.parse(JSON.stringify(this.oldTag));
-              if (builder) builder.setTag(this.tag);
-              else this.setTag(this.oldTag);
-              if (this.dappContainer) this.dappContainer.setTag(this.oldTag);
+              if (builder) builder.setTag(oldTag);
+              else this.setTag(oldTag);
+              if (this.dappContainer) this.dappContainer.setTag(oldTag);
             },
             redo: () => { }
           }
@@ -447,7 +301,10 @@ export default class ScomBanner extends Module {
       {
         name: 'Builder Configurator',
         target: 'Builders',
-        getActions: this.getActions.bind(this),
+        getActions: () => {
+          const themeSchema = this.getThemeSchema();
+          return this._getActions(propertiesSchema, themeSchema);
+        },
         getData: this.getData.bind(this),
         setData: async (data: IConfig) => {
           const defaultData = dataJson.defaultBuilderData as any;
@@ -459,7 +316,10 @@ export default class ScomBanner extends Module {
       {
         name: 'Emdedder Configurator',
         target: 'Embedders',
-        getActions: this.getEmbedderActions.bind(this),
+        getActions: () => {
+          const themeSchema = this.getThemeSchema(true);
+          return this._getActions(propertiesSchema, themeSchema);
+        },
         getData: this.getData.bind(this),
         setData: this.setData.bind(this),
         getTag: this.getTag.bind(this),
@@ -477,7 +337,7 @@ export default class ScomBanner extends Module {
     } = config[themeVar] || {};
     const {
       textAlign = 'left',
-      height = '150px'
+      height = 'auto'
     } = config || {};
     this.pnlCardBody.clearInnerHTML();
     const mainStack: Control = (
@@ -534,6 +394,7 @@ export default class ScomBanner extends Module {
       <i-hstack
         background={{ image: this._data.backgroundImage || '', color: 'transparent' }}
         verticalAlignment="center"
+        minHeight={150}
         class={backgroundStyle}
         {...options}
       >

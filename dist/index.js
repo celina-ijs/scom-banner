@@ -65,36 +65,6 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const Theme = components_2.Styles.Theme.ThemeVars;
-    // const configSchema = {
-    //   type: 'object',
-    //   required: [],
-    //   properties: {
-    //     titleFontColor: {
-    //       type: 'string',
-    //       format: 'color'
-    //     },
-    //     descriptionFontColor: {
-    //       type: 'string',
-    //       format: 'color'
-    //     },
-    //     linkButtonCaptionColor: {
-    //       type: 'string',
-    //       format: 'color'
-    //     },
-    //     linkButtonColor: {
-    //       type: 'string',
-    //       format: 'color'
-    //     },
-    //     textAlign: {
-    //       type: 'string',
-    //       enum: [
-    //         'left',
-    //         'center',
-    //         'right'
-    //       ]
-    //     }
-    //   }
-    // }
     const propertiesSchema = {
         type: 'object',
         properties: {
@@ -128,7 +98,6 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
     let ScomBanner = class ScomBanner extends components_2.Module {
         constructor(parent, options) {
             super(parent, options);
-            this._oldData = { title: '' };
             this._data = { title: '' };
             this.oldTag = {};
             this.tag = {};
@@ -141,7 +110,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         }
         get showFooter() {
             var _a;
-            return (_a = this._data.showFooter) !== null && _a !== void 0 ? _a : true;
+            return (_a = this._data.showFooter) !== null && _a !== void 0 ? _a : false;
         }
         set showFooter(value) {
             this._data.showFooter = value;
@@ -150,7 +119,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         }
         get showHeader() {
             var _a;
-            return (_a = this._data.showHeader) !== null && _a !== void 0 ? _a : true;
+            return (_a = this._data.showHeader) !== null && _a !== void 0 ? _a : false;
         }
         set showHeader(value) {
             this._data.showHeader = value;
@@ -162,7 +131,6 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         }
         async setData(data) {
             var _a;
-            this._oldData = Object.assign({}, this._data);
             this._data = data;
             const containerData = {
                 showWalletNetwork: false,
@@ -201,25 +169,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         setTheme(value) {
             this.onUpdateBlock(this.tag);
         }
-        // getConfigSchema() {
-        //   return configSchema;
-        // }
-        // onConfigSave(config: any) {
-        //   this.tag = config;
-        //   this.onUpdateBlock(config);
-        // }
-        // async edit() {
-        //   // this.pnlCard.visible = false
-        // }
-        // async confirm() {
-        //   this.onUpdateBlock(this.tag)
-        //   // this.pnlCard.visible = true
-        // }
-        // async discard() {
-        //   // this.pnlCard.visible = true
-        // }
-        // async config() { }
-        getEmbedderActions() {
+        getThemeSchema(readOnly = false) {
             const themeSchema = {
                 type: 'object',
                 properties: {
@@ -229,12 +179,12 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                             titleFontColor: {
                                 type: 'string',
                                 format: 'color',
-                                readOnly: true
+                                readOnly
                             },
                             descriptionFontColor: {
                                 type: 'string',
                                 format: 'color',
-                                readOnly: true
+                                readOnly
                             },
                             linkButtonStyle: {
                                 type: 'array',
@@ -268,12 +218,12 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                             titleFontColor: {
                                 type: 'string',
                                 format: 'color',
-                                readOnly: true
+                                readOnly
                             },
                             descriptionFontColor: {
                                 type: 'string',
                                 format: 'color',
-                                readOnly: true
+                                readOnly
                             },
                             linkButtonStyle: {
                                 type: 'array',
@@ -308,104 +258,11 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                             'center',
                             'right'
                         ],
-                        readOnly: true
+                        readOnly
                     }
                 }
             };
-            return this._getActions(propertiesSchema, themeSchema);
-        }
-        getActions() {
-            const themeSchema = {
-                type: 'object',
-                properties: {
-                    dark: {
-                        type: 'object',
-                        properties: {
-                            titleFontColor: {
-                                type: 'string',
-                                format: 'color'
-                            },
-                            descriptionFontColor: {
-                                type: 'string',
-                                format: 'color'
-                            },
-                            linkButtonStyle: {
-                                type: 'array',
-                                items: {
-                                    type: 'object',
-                                    properties: {
-                                        captionColor: {
-                                            type: 'string',
-                                            format: 'color'
-                                        },
-                                        color: {
-                                            type: 'string',
-                                            format: 'color'
-                                        },
-                                        buttonType: {
-                                            type: 'string',
-                                            enum: [
-                                                'filled',
-                                                'outlined',
-                                                'text'
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    light: {
-                        type: 'object',
-                        properties: {
-                            titleFontColor: {
-                                type: 'string',
-                                format: 'color'
-                            },
-                            descriptionFontColor: {
-                                type: 'string',
-                                format: 'color'
-                            },
-                            linkButtonStyle: {
-                                type: 'array',
-                                items: {
-                                    type: 'object',
-                                    properties: {
-                                        captionColor: {
-                                            type: 'string',
-                                            format: 'color'
-                                        },
-                                        color: {
-                                            type: 'string',
-                                            format: 'color'
-                                        },
-                                        buttonType: {
-                                            type: 'string',
-                                            enum: [
-                                                'filled',
-                                                'outlined',
-                                                'text'
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    textAlign: {
-                        type: 'string',
-                        enum: [
-                            'left',
-                            'center',
-                            'right'
-                        ]
-                    },
-                    height: {
-                        type: 'string'
-                    }
-                }
-            };
-            return this._getActions(propertiesSchema, themeSchema);
+            return themeSchema;
         }
         _getActions(propertiesSchema, themeSchema) {
             const actions = [
@@ -413,16 +270,27 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                     name: 'Settings',
                     icon: 'cog',
                     command: (builder, userInputData) => {
+                        let oldData = {};
                         return {
                             execute: async () => {
+                                oldData = JSON.parse(JSON.stringify(this._data));
+                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.title) !== undefined)
+                                    this._data.title = userInputData.title;
+                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.description) !== undefined)
+                                    this._data.description = userInputData.description;
+                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.backgroundImage) !== undefined)
+                                    this._data.backgroundImage = userInputData.backgroundImage;
+                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.linkButtons) !== undefined)
+                                    this._data.linkButtons = userInputData.linkButtons;
+                                this.onUpdateBlock(this.tag);
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
-                                    builder.setData(userInputData);
-                                this.setData(userInputData);
+                                    builder.setData(this._data);
                             },
-                            undo: () => {
+                            undo: async () => {
+                                this._data = JSON.parse(JSON.stringify(oldData));
+                                this.onUpdateBlock(this.tag);
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
-                                    builder.setData(this._oldData);
-                                this.setData(this._oldData);
+                                    builder.setData(this._data);
                             },
                             redo: () => { }
                         };
@@ -433,11 +301,12 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                     name: 'Theme Settings',
                     icon: 'palette',
                     command: (builder, userInputData) => {
+                        let oldTag = {};
                         return {
                             execute: async () => {
                                 if (!userInputData)
                                     return;
-                                this.oldTag = JSON.parse(JSON.stringify(this.tag));
+                                oldTag = JSON.parse(JSON.stringify(this.tag));
                                 if (builder)
                                     builder.setTag(userInputData);
                                 else
@@ -448,13 +317,12 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                             undo: () => {
                                 if (!userInputData)
                                     return;
-                                this.tag = JSON.parse(JSON.stringify(this.oldTag));
                                 if (builder)
-                                    builder.setTag(this.tag);
+                                    builder.setTag(oldTag);
                                 else
-                                    this.setTag(this.oldTag);
+                                    this.setTag(oldTag);
                                 if (this.dappContainer)
-                                    this.dappContainer.setTag(this.oldTag);
+                                    this.dappContainer.setTag(oldTag);
                             },
                             redo: () => { }
                         };
@@ -469,7 +337,10 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                 {
                     name: 'Builder Configurator',
                     target: 'Builders',
-                    getActions: this.getActions.bind(this),
+                    getActions: () => {
+                        const themeSchema = this.getThemeSchema();
+                        return this._getActions(propertiesSchema, themeSchema);
+                    },
                     getData: this.getData.bind(this),
                     setData: async (data) => {
                         const defaultData = data_json_1.default.defaultBuilderData;
@@ -481,7 +352,10 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                 {
                     name: 'Emdedder Configurator',
                     target: 'Embedders',
-                    getActions: this.getEmbedderActions.bind(this),
+                    getActions: () => {
+                        const themeSchema = this.getThemeSchema(true);
+                        return this._getActions(propertiesSchema, themeSchema);
+                    },
                     getData: this.getData.bind(this),
                     setData: this.setData.bind(this),
                     getTag: this.getTag.bind(this),
@@ -493,7 +367,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             var _a, _b, _c;
             const themeVar = ((_a = this.dappContainer) === null || _a === void 0 ? void 0 : _a.theme) || 'light';
             const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkButtonStyle = [] } = config[themeVar] || {};
-            const { textAlign = 'left', height = '150px' } = config || {};
+            const { textAlign = 'left', height = 'auto' } = config || {};
             this.pnlCardBody.clearInnerHTML();
             const mainStack = (this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle },
                 this.$render("i-label", { caption: ((_b = this._data) === null || _b === void 0 ? void 0 : _b.title) || '', font: { size: '3rem', bold: true, color: titleFontColor }, lineHeight: 1.5 }),
@@ -517,7 +391,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             if (height) {
                 options.height = height;
             }
-            const item = (this.$render("i-hstack", Object.assign({ background: { image: this._data.backgroundImage || '', color: 'transparent' }, verticalAlignment: "center", class: index_css_1.backgroundStyle }, options), mainStack));
+            const item = (this.$render("i-hstack", Object.assign({ background: { image: this._data.backgroundImage || '', color: 'transparent' }, verticalAlignment: "center", minHeight: 150, class: index_css_1.backgroundStyle }, options), mainStack));
             this.pnlCardBody.appendChild(item);
         }
         init() {
