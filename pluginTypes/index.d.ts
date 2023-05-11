@@ -50,7 +50,7 @@ declare module "@scom/scom-banner/data.json.ts" {
 }
 /// <amd-module name="@scom/scom-banner" />
 declare module "@scom/scom-banner" {
-    import { Module, ControlElement, Container } from '@ijstech/components';
+    import { Module, ControlElement, Container, IDataSchema } from '@ijstech/components';
     import { IConfig } from "@scom/scom-banner/global/index.ts";
     interface ScomBannerElement extends ControlElement {
         data: IConfig;
@@ -65,10 +65,8 @@ declare module "@scom/scom-banner" {
         }
     }
     export default class ScomBanner extends Module {
-        private pnlCard;
         private pnlCardBody;
         private dappContainer;
-        private _oldData;
         private _data;
         private oldTag;
         tag: any;
@@ -88,13 +86,21 @@ declare module "@scom/scom-banner" {
         private updateTag;
         private setTag;
         private setTheme;
-        private getEmbedderActions;
-        private getActions;
+        private getThemeSchema;
         private _getActions;
         getConfigurators(): {
             name: string;
             target: string;
-            getActions: any;
+            getActions: () => {
+                name: string;
+                icon: string;
+                command: (builder: any, userInputData: any) => {
+                    execute: () => Promise<void>;
+                    undo: () => void;
+                    redo: () => void;
+                };
+                userInputDataSchema: IDataSchema;
+            }[];
             getData: any;
             setData: any;
             getTag: any;
