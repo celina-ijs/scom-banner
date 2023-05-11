@@ -39,6 +39,15 @@ declare module "@scom/scom-banner/index.css.ts" {
     export const backgroundStyle: string;
     export const actionButtonStyle: string;
 }
+/// <amd-module name="@scom/scom-banner/data.json.ts" />
+declare module "@scom/scom-banner/data.json.ts" {
+    const _default: {
+        defaultBuilderData: {
+            title: string;
+        };
+    };
+    export default _default;
+}
 /// <amd-module name="@scom/scom-banner" />
 declare module "@scom/scom-banner" {
     import { Module, ControlElement, Container } from '@ijstech/components';

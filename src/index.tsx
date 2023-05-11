@@ -14,6 +14,7 @@ import { } from '@ijstech/eth-wallet';
 import { IConfig } from './global/index';
 import ScomDappContainer from "@scom/scom-dapp-container";
 import { containerStyle, backgroundStyle, actionButtonStyle } from './index.css';
+import dataJson from './data.json';
 const Theme = Styles.Theme.ThemeVars;
 
 // const configSchema = {
@@ -448,7 +449,10 @@ export default class ScomBanner extends Module {
         target: 'Builders',
         getActions: this.getActions.bind(this),
         getData: this.getData.bind(this),
-        setData: this.setData.bind(this),
+        setData: async (data: IConfig) => {
+          const defaultData = dataJson.defaultBuilderData as any;
+          await this.setData({...defaultData, ...data})
+        },
         getTag: this.getTag.bind(this),
         setTag: this.setTag.bind(this)
       },
@@ -473,7 +477,7 @@ export default class ScomBanner extends Module {
     } = config[themeVar] || {};
     const {
       textAlign = 'left',
-      height
+      height = '150px'
     } = config || {};
     this.pnlCardBody.clearInnerHTML();
     const mainStack: Control = (
