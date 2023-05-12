@@ -3,8 +3,6 @@ export interface IConfig {
   description?: string;
   backgroundImage?: string;
   linkButtons?: ILinkButton[];
-  showHeader?: boolean;
-  showFooter?: boolean;
 }
 
 export interface ILinkButton {
