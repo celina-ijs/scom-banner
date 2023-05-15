@@ -9,21 +9,17 @@ import {
   Container,
   IDataSchema
 } from '@ijstech/components';
-import { } from '@ijstech/eth-contract';
-import { } from '@ijstech/eth-wallet';
 import { IConfig } from './global/index';
-import ScomDappContainer from "@scom/scom-dapp-container";
 import { containerStyle, backgroundStyle, actionButtonStyle } from './index.css';
 import dataJson from './data.json';
 const Theme = Styles.Theme.ThemeVars;
 
 const propertiesSchema: IDataSchema = {
   type: 'object',
+  required: ['title'],
   properties: {
     title: {
-      type: 'string',
-      minLength: 1,
-      required: true
+      type: 'string'
     },
     description: {
       type: 'string'
@@ -58,6 +54,11 @@ declare global {
       ["i-scom-banner"]: ScomBannerElement;
     }
   }
+}
+
+const defaultColors = {
+  titleFontColor: '#565656',
+  descriptionFontColor: '#565656'
 }
 
 @customModule
@@ -304,8 +305,8 @@ export default class ScomBanner extends Module {
   private onUpdateBlock(config: any) {
     const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
     const {
-      titleFontColor = Theme.text.primary,
-      descriptionFontColor = Theme.text.primary,
+      titleFontColor = defaultColors.titleFontColor,
+      descriptionFontColor = defaultColors.descriptionFontColor,
       linkButtonStyle = []
     } = config[themeVar] || {};
     const {
