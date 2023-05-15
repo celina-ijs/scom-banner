@@ -67,11 +67,10 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
     const Theme = components_2.Styles.Theme.ThemeVars;
     const propertiesSchema = {
         type: 'object',
+        required: ['title'],
         properties: {
             title: {
-                type: 'string',
-                minLength: 1,
-                required: true
+                type: 'string'
             },
             description: {
                 type: 'string'
@@ -94,6 +93,10 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                 }
             }
         }
+    };
+    const defaultColors = {
+        titleFontColor: '#565656',
+        descriptionFontColor: '#565656'
     };
     let ScomBanner = class ScomBanner extends components_2.Module {
         constructor(parent, options) {
@@ -336,7 +339,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         onUpdateBlock(config) {
             var _a, _b;
             const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
-            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkButtonStyle = [] } = config[themeVar] || {};
+            const { titleFontColor = defaultColors.titleFontColor, descriptionFontColor = defaultColors.descriptionFontColor, linkButtonStyle = [] } = config[themeVar] || {};
             const { textAlign = 'left', height = 'auto' } = config || {};
             this.pnlCardBody.clearInnerHTML();
             const mainStack = (this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle },
