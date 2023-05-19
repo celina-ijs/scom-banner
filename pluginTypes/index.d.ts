@@ -78,7 +78,7 @@ declare module "@scom/scom-banner" {
         private setTheme;
         private getThemeSchema;
         private _getActions;
-        getConfigurators(): {
+        getConfigurators(): ({
             name: string;
             target: string;
             getActions: () => {
@@ -92,10 +92,33 @@ declare module "@scom/scom-banner" {
                 userInputDataSchema: IDataSchema;
             }[];
             getData: any;
+            setData: (data: IConfig) => Promise<void>;
+            getTag: any;
+            setTag: any;
+            getLinkParams?: undefined;
+            setLinkParams?: undefined;
+        } | {
+            name: string;
+            target: string;
+            getActions: () => {
+                name: string;
+                icon: string;
+                command: (builder: any, userInputData: any) => {
+                    execute: () => Promise<void>;
+                    undo: () => void;
+                    redo: () => void;
+                };
+                userInputDataSchema: IDataSchema;
+            }[];
+            getLinkParams: () => {
+                data: string;
+            };
+            setLinkParams: (params: any) => Promise<void>;
+            getData: any;
             setData: any;
             getTag: any;
             setTag: any;
-        }[];
+        })[];
         private onUpdateBlock;
         init(): void;
         render(): any;
