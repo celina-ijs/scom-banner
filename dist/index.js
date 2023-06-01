@@ -355,7 +355,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         onUpdateBlock(config) {
             var _a, _b;
             const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
-            const { titleFontColor = defaultColors.titleFontColor, descriptionFontColor = defaultColors.descriptionFontColor, linkButtonStyle = [] } = config[themeVar] || {};
+            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkButtonStyle = [] } = config[themeVar] || {};
             const { textAlign = 'left', height = 'auto' } = config || {};
             this.pnlCardBody.clearInnerHTML();
             const mainStack = (this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle },
