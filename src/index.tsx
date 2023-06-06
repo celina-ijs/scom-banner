@@ -324,8 +324,8 @@ export default class ScomBanner extends Module {
   private onUpdateBlock(config: any) {
     const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
     const {
-      titleFontColor = Theme.text.primary,
-      descriptionFontColor = Theme.text.primary,
+      titleFontColor = defaultColors.titleFontColor,
+      descriptionFontColor = defaultColors.descriptionFontColor,
       linkButtonStyle = []
     } = config[themeVar] || {};
     const {
