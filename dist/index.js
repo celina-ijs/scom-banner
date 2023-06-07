@@ -387,6 +387,10 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             super.init();
             const data = this.getAttribute('data', true);
             data && this.setData(data);
+            this.setTag({
+                light: Object.assign({}, defaultColors),
+                dark: Object.assign({}, defaultColors)
+            });
         }
         render() {
             return (this.$render("i-panel", { id: "pnlCard" },

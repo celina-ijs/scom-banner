@@ -401,6 +401,10 @@ export default class ScomBanner extends Module {
     super.init();
     const data = this.getAttribute('data', true);
     data && this.setData(data);
+    this.setTag({
+      light: {...defaultColors},
+      dark: {...defaultColors}
+    })
   }
 
   render() {
