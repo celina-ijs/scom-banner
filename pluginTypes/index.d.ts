@@ -51,6 +51,7 @@ declare module "@scom/scom-banner" {
     import { Module, ControlElement, Container, IDataSchema } from '@ijstech/components';
     import { IConfig } from "@scom/scom-banner/global/index.ts";
     interface ScomBannerElement extends ControlElement {
+        lazyLoad?: boolean;
         data: IConfig;
     }
     global {

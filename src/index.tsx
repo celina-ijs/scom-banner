@@ -45,6 +45,7 @@ const propertiesSchema: IDataSchema = {
 };
 
 interface ScomBannerElement extends ControlElement {
+  lazyLoad?: boolean;
   data: IConfig;
 }
 
@@ -399,8 +400,11 @@ export default class ScomBanner extends Module {
 
   init() {
     super.init();
-    const data = this.getAttribute('data', true);
-    data && this.setData(data);
+    const lazyLoad = this.getAttribute('lazyLoad', true, false);
+    if (!lazyLoad) {
+      const data = this.getAttribute('data', true);
+      data && this.setData(data);
+    }
     this.setTag({
       light: {...defaultColors},
       dark: {...defaultColors}
