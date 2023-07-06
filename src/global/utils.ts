@@ -1,7 +1,9 @@
 export interface IConfig {
   title: string;
   description?: string;
-  backgroundImage?: string;
+  backgroundImageCid?: string;
+  backgroundImageUrl?: string;
+  url?: string;
   linkButtons?: ILinkButton[];
 }
 

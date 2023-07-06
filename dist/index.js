@@ -1,10 +1,6 @@
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -79,7 +75,13 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             description: {
                 type: 'string'
             },
-            backgroundImage: {
+            backgroundImageCid: {
+                title: 'Background Image',
+                type: 'string',
+                format: 'data-cid'
+            },
+            backgroundImageUrl: {
+                title: 'Url',
                 type: 'string'
             },
             linkButtons: {
@@ -103,16 +105,16 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         descriptionFontColor: '#565656'
     };
     let ScomBanner = class ScomBanner extends components_2.Module {
-        static async create(options, parent) {
-            let self = new this(parent, options);
-            await self.ready();
-            return self;
-        }
         constructor(parent, options) {
             super(parent, options);
             this._data = { title: '' };
             this.tag = {};
             this.defaultEdit = true;
+        }
+        static async create(options, parent) {
+            let self = new this(parent, options);
+            await self.ready();
+            return self;
         }
         getData() {
             return this._data;
@@ -255,17 +257,9 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                         return {
                             execute: async () => {
                                 oldData = JSON.parse(JSON.stringify(this._data));
-                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.title) !== undefined)
-                                    this._data.title = userInputData.title;
-                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.description) !== undefined)
-                                    this._data.description = userInputData.description;
-                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.backgroundImage) !== undefined)
-                                    this._data.backgroundImage = userInputData.backgroundImage;
-                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.linkButtons) !== undefined)
-                                    this._data.linkButtons = userInputData.linkButtons;
-                                this.onUpdateBlock(this.tag);
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
-                                    builder.setData(this._data);
+                                    builder.setData(userInputData);
+                                this.setData(userInputData);
                             },
                             undo: async () => {
                                 this._data = JSON.parse(JSON.stringify(oldData));
@@ -384,7 +378,11 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             if (height) {
                 options.height = height;
             }
-            const item = (this.$render("i-hstack", Object.assign({ background: { image: this._data.backgroundImage || '', color: 'transparent' }, verticalAlignment: "center", minHeight: 150, class: index_css_1.backgroundStyle }, options), mainStack));
+            let url = this._data.backgroundImageUrl || '';
+            if (this._data.backgroundImageCid) {
+                url = "https://ipfs.scom.dev/ipfs/" + this._data.backgroundImageCid;
+            }
+            const item = (this.$render("i-hstack", Object.assign({ background: { image: url, color: 'transparent' }, verticalAlignment: "center", minHeight: 150, class: index_css_1.backgroundStyle }, options), mainStack));
             this.pnlCardBody.appendChild(item);
         }
         init() {
@@ -408,7 +406,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
     };
     ScomBanner = __decorate([
         components_2.customModule,
-        (0, components_2.customElements)('i-scom-banner')
+        components_2.customElements('i-scom-banner')
     ], ScomBanner);
     exports.default = ScomBanner;
 });

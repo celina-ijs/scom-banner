@@ -24,7 +24,13 @@ const propertiesSchema: IDataSchema = {
     description: {
       type: 'string'
     },
-    backgroundImage: {
+    backgroundImageCid: {
+      title: 'Background Image',
+      type: 'string',
+      format: 'data-cid'
+    },
+    backgroundImageUrl: {
+      title: 'Url',
       type: 'string'
     },
     linkButtons: {
@@ -228,12 +234,8 @@ export default class ScomBanner extends Module {
           return {
             execute: async () => {
               oldData = JSON.parse(JSON.stringify(this._data))
-              if (userInputData?.title !== undefined) this._data.title = userInputData.title;
-              if (userInputData?.description !== undefined) this._data.description = userInputData.description;
-              if (userInputData?.backgroundImage !== undefined) this._data.backgroundImage = userInputData.backgroundImage;
-              if (userInputData?.linkButtons !== undefined) this._data.linkButtons = userInputData.linkButtons;
-              this.onUpdateBlock(this.tag);
-              if (builder?.setData) builder.setData(this._data);
+              if (builder?.setData) builder.setData(userInputData);
+              this.setData(userInputData);
             },
             undo: async () => {
               this._data = JSON.parse(JSON.stringify(oldData))
@@ -384,9 +386,13 @@ export default class ScomBanner extends Module {
     if (height) {
       options.height = height;
     }
+    let url = this._data.backgroundImageUrl || '';
+    if (this._data.backgroundImageCid) {
+      url = "https://ipfs.scom.dev/ipfs/" + this._data.backgroundImageCid;
+    }
     const item = (
       <i-hstack
-        background={{ image: this._data.backgroundImage || '', color: 'transparent' }}
+        background={{ image: url, color: 'transparent' }}
         verticalAlignment="center"
         minHeight={150}
         class={backgroundStyle}
