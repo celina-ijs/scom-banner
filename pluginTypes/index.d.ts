@@ -50,7 +50,7 @@ declare module "@scom/scom-banner/data.json.ts" {
 }
 /// <amd-module name="@scom/scom-banner" />
 declare module "@scom/scom-banner" {
-    import { Module, ControlElement, Container, IDataSchema } from '@ijstech/components';
+    import { Module, ControlElement, Container, IDataSchema, IUISchema } from '@ijstech/components';
     import { IConfig } from "@scom/scom-banner/global/index.ts";
     interface ScomBannerElement extends ControlElement {
         lazyLoad?: boolean;
@@ -89,10 +89,11 @@ declare module "@scom/scom-banner" {
                 icon: string;
                 command: (builder: any, userInputData: any) => {
                     execute: () => Promise<void>;
-                    undo: () => void;
+                    undo: () => Promise<void>;
                     redo: () => void;
                 };
                 userInputDataSchema: IDataSchema;
+                userInputUISchema: IUISchema;
             }[];
             getData: any;
             setData: (data: IConfig) => Promise<void>;
@@ -108,10 +109,11 @@ declare module "@scom/scom-banner" {
                 icon: string;
                 command: (builder: any, userInputData: any) => {
                     execute: () => Promise<void>;
-                    undo: () => void;
+                    undo: () => Promise<void>;
                     redo: () => void;
                 };
                 userInputDataSchema: IDataSchema;
+                userInputUISchema: IUISchema;
             }[];
             getLinkParams: () => {
                 data: string;

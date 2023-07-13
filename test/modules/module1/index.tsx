@@ -18,8 +18,8 @@ export default class Module1 extends Module {
                 data={{
                     title: 'Title',
                     description: 'Description',
-                    backgroundImage: assets.fullPath('img/background.png'),
-                    showFooter: false
+                    backgroundImageUrl: assets.fullPath('img/background.png'),
+                    // showFooter: false
                 }}
                 tag={{
                     light: {
