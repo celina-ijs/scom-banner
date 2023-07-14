@@ -618,6 +618,7 @@ export default class ScomBanner extends Module {
         setData: async (data: IConfig) => {
           // const defaultData = dataJson.defaultBuilderData as any;
           // await this.setData({...defaultData, ...data})
+          await this.setData(data)
         },
         getTag: this.getTag.bind(this),
         setTag: this.setTag.bind(this)

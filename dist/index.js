@@ -650,6 +650,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                     setData: async (data) => {
                         // const defaultData = dataJson.defaultBuilderData as any;
                         // await this.setData({...defaultData, ...data})
+                        await this.setData(data);
                     },
                     getTag: this.getTag.bind(this),
                     setTag: this.setTag.bind(this)
