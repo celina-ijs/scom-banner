@@ -1,6 +1,10 @@
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -61,60 +65,384 @@ define("@scom/scom-banner/data.json.ts", ["require", "exports"], function (requi
         }
     };
 });
-define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom/scom-banner/index.css.ts", "@scom/scom-banner/data.json.ts"], function (require, exports, components_2, index_css_1, data_json_1) {
+define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom/scom-banner/index.css.ts"], function (require, exports, components_2, index_css_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const Theme = components_2.Styles.Theme.ThemeVars;
-    const propertiesSchema = {
-        type: 'object',
-        required: ['title'],
-        properties: {
-            title: {
-                type: 'string'
-            },
-            description: {
-                type: 'string'
-            },
-            backgroundImageCid: {
-                title: 'Background Image',
-                type: 'string',
-                format: 'data-cid'
-            },
-            backgroundImageUrl: {
-                title: 'Url',
-                type: 'string'
-            },
-            linkButtons: {
-                type: 'array',
-                items: {
-                    type: 'object',
-                    properties: {
-                        caption: {
-                            type: 'string'
-                        },
-                        url: {
-                            type: 'string'
-                        }
-                    }
-                }
+    const propertiesSchemaString = `{
+  "type":"object",
+  "required":[
+    "title"
+  ],
+  "properties":{
+    "title":{
+      "type":"string"
+    },
+    "description":{
+      "type":"string"
+    },
+    "backgroundImageUrl":{
+      "type":"string"
+    },
+    "backgroundImageCid": {
+      "type":"string"
+    },
+    "linkButtons":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "properties":{
+          "caption":{
+            "type":"string"
+          },
+          "url":{
+            "type":"string"
+          },
+          "buttonType": {
+            "type": "string",
+            "oneOf": [
+              {
+                "title": "Filled",
+                "const": "filled"
+              },
+              {
+                "title": "Outlined",
+                "const": "outlined"
+              },
+              {
+                "title": "Text",
+                "const": "text"
+              }
+            ]
+          },
+          "light": {
+            "title": "Light mode",
+            "type": "object",
+            "properties": {
+              "textColor":{
+                "title":"Text color",
+                "type":"string",
+                "format":"color"
+              },
+              "backgroundColor":{
+                "type":"string",
+                "format":"color"
+              }
             }
+          },
+          "dark": {
+            "title": "Dark mode",
+            "type": "object",
+            "properties": {
+              "textColor":{
+                "title":"Text color",
+                "type":"string",
+                "format":"color"
+              },
+              "backgroundColor":{
+                "type":"string",
+                "format":"color"
+              }
+            }
+          }
         }
-    };
+      }
+    },
+    "dark":{
+      "type":"object",
+      "properties":{
+        "titleFontColor":{
+          "type":"string",
+          "format":"color",
+          "readOnly":true
+        },
+        "descriptionFontColor":{
+          "type":"string",
+          "format":"color",
+          "readOnly":true
+        },
+        "linkButtonStyle":{
+          "type":"array",
+          "items":{
+            "type":"object",
+            "properties":{
+              "captionColor":{
+                "type":"string",
+                "format":"color"
+              },
+              "color":{
+                "type":"string",
+                "format":"color"
+              },
+              "buttonType":{
+                "type":"string",
+                "enum":[
+                  "filled",
+                  "outlined",
+                  "text"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "light":{
+      "type":"object",
+      "properties":{
+        "titleFontColor":{
+          "type":"string",
+          "format":"color",
+          "readOnly":true
+        },
+        "descriptionFontColor":{
+          "type":"string",
+          "format":"color",
+          "readOnly":true
+        },
+        "linkButtonStyle":{
+          "type":"array",
+          "items":{
+            "type":"object",
+            "properties":{
+              "captionColor":{
+                "type":"string",
+                "format":"color"
+              },
+              "color":{
+                "type":"string",
+                "format":"color"
+              },
+              "buttonType":{
+                "type":"string",
+                "enum":[
+                  "filled",
+                  "outlined",
+                  "text"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "textAlign":{
+      "type":"string",
+      "oneOf":[
+        {"title": "Left", "const":  "left"},
+        {"title": "Center", "const":  "center"},
+        {"title": "Right", "const":  "right"}
+      ]
+    },
+    "height":{
+      "type":"number"
+    }
+  }
+}
+`;
+    const propertiesUISchemaString = `{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "HorizontalLayout",
+      "elements": [
+        {
+          "type": "Categorization",
+          "elements": [
+            {
+              "type": "Category",
+              "label": "General settings",
+              "elements": [
+                {
+                  "type": "VerticalLayout",
+                  "elements": [
+                    {
+                      "type": "HorizontalLayout",
+                      "elements": [
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/title"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "HorizontalLayout",
+                      "elements": [
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/description"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "HorizontalLayout",
+                      "elements": [
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/backgroundImageUrl"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "HorizontalLayout",
+                      "elements": [
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/backgroundImageCid"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "HorizontalLayout",
+                      "elements": [
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/linkButtons",
+                          "options": {
+                            "elementLabelProp": "caption",
+                            "detail": {
+                              "type": "VerticalLayout",
+                              "elements": [
+                                {
+                                  "type": "HorizontalLayout",
+                                  "elements": [
+                                    {
+                                      "type": "Control",
+                                      "scope": "#/properties/caption"
+                                    },
+                                    {
+                                      "type": "Control",
+                                      "scope": "#/properties/url"
+                                    },
+                                    {
+                                      "type": "Control",
+                                      "scope": "#/properties/buttonType"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "HorizontalLayout",
+                                  "elements": [
+                                    {
+                                      "type": "Group",
+                                      "label": "Dark",
+                                      "elements": [
+                                        {
+                                          "type": "VerticalLayout",
+                                          "elements": [
+                                            {
+                                              "type": "HorizontalLayout",
+                                              "elements": [
+                                                {
+                                                  "type": "Control",
+                                                  "scope": "#/properties/dark/properties/textColor"
+                                                },
+                                                {
+                                                  "type": "Control",
+                                                  "scope": "#/properties/dark/properties/backgroundColor"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "HorizontalLayout",
+                                  "elements": [
+                                    {
+                                      "type": "Group",
+                                      "label": "Light",
+                                      "elements": [
+                                        {
+                                          "type": "VerticalLayout",
+                                          "elements": [
+                                            {
+                                              "type": "HorizontalLayout",
+                                              "elements": [
+                                                {
+                                                  "type": "Control",
+                                                  "scope": "#/properties/light/properties/textColor"
+                                                },
+                                                {
+                                                  "type": "Control",
+                                                  "scope": "#/properties/light/properties/backgroundColor"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Category",
+              "label": "Theme settings",
+              "elements": [
+                {
+                  "type": "VerticalLayout",
+                  "elements": [
+                    {
+                      "type": "HorizontalLayout",
+                      "elements": [
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/textAlign"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "HorizontalLayout",
+                      "elements": [
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/height"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+
+`;
+    const propertiesSchema = JSON.parse(propertiesSchemaString);
+    const propertiesUISchema = JSON.parse(propertiesUISchemaString);
     const defaultColors = {
         titleFontColor: '#565656',
         descriptionFontColor: '#565656'
     };
     let ScomBanner = class ScomBanner extends components_2.Module {
+        static async create(options, parent) {
+            let self = new this(parent, options);
+            await self.ready();
+            return self;
+        }
         constructor(parent, options) {
             super(parent, options);
             this._data = { title: '' };
             this.tag = {};
             this.defaultEdit = true;
-        }
-        static async create(options, parent) {
-            let self = new this(parent, options);
-            await self.ready();
-            return self;
         }
         getData() {
             return this._data;
@@ -257,9 +585,19 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                         return {
                             execute: async () => {
                                 oldData = JSON.parse(JSON.stringify(this._data));
+                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.title) !== undefined)
+                                    this._data.title = userInputData.title;
+                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.description) !== undefined)
+                                    this._data.description = userInputData.description;
+                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.backgroundImageUrl) !== undefined)
+                                    this._data.backgroundImageUrl = userInputData.backgroundImageUrl;
+                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.backgroundImageCid) !== undefined)
+                                    this._data.backgroundImageCid = userInputData.backgroundImageCid;
+                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.linkButtons) !== undefined)
+                                    this._data.linkButtons = userInputData.linkButtons;
+                                this.onUpdateBlock(this.tag);
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
-                                    builder.setData(userInputData);
-                                this.setData(userInputData);
+                                    builder.setData(this._data);
                             },
                             undo: async () => {
                                 this._data = JSON.parse(JSON.stringify(oldData));
@@ -271,35 +609,30 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                         };
                     },
                     userInputDataSchema: propertiesSchema,
-                },
-                {
-                    name: 'Theme Settings',
-                    icon: 'palette',
-                    command: (builder, userInputData) => {
-                        let oldTag = {};
-                        return {
-                            execute: async () => {
-                                if (!userInputData)
-                                    return;
-                                oldTag = JSON.parse(JSON.stringify(this.tag));
-                                if (builder)
-                                    builder.setTag(userInputData);
-                                else
-                                    this.setTag(userInputData);
-                            },
-                            undo: () => {
-                                if (!userInputData)
-                                    return;
-                                if (builder)
-                                    builder.setTag(oldTag);
-                                else
-                                    this.setTag(oldTag);
-                            },
-                            redo: () => { }
-                        };
-                    },
-                    userInputDataSchema: themeSchema
+                    userInputUISchema: propertiesUISchema
                 }
+                // {
+                //   name: 'Theme Settings',
+                //   icon: 'palette',
+                //   command: (builder: any, userInputData: any) => {
+                //     let oldTag = {};
+                //     return {
+                //       execute: async () => {
+                //         if (!userInputData) return;
+                //         oldTag = JSON.parse(JSON.stringify(this.tag));
+                //         if (builder) builder.setTag(userInputData);
+                //         else this.setTag(userInputData);
+                //       },
+                //       undo: () => {
+                //         if (!userInputData) return;
+                //         if (builder) builder.setTag(oldTag);
+                //         else this.setTag(oldTag);
+                //       },
+                //       redo: () => { }
+                //     }
+                //   },
+                //   userInputDataSchema: themeSchema
+                // }
             ];
             return actions;
         }
@@ -315,8 +648,8 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                     },
                     getData: this.getData.bind(this),
                     setData: async (data) => {
-                        const defaultData = data_json_1.default.defaultBuilderData;
-                        await this.setData(Object.assign(Object.assign({}, defaultData), data));
+                        // const defaultData = dataJson.defaultBuilderData as any;
+                        // await this.setData({...defaultData, ...data})
                     },
                     getTag: this.getTag.bind(this),
                     setTag: this.setTag.bind(this)
@@ -357,7 +690,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
             const { textAlign = 'left', height = 'auto' } = config || {};
             this.pnlCardBody.clearInnerHTML();
             const mainStack = (this.$render("i-vstack", { gap: "1.5rem", class: index_css_1.containerStyle },
-                this.$render("i-label", { caption: ((_a = this._data) === null || _a === void 0 ? void 0 : _a.title) || '', font: { size: '3rem', bold: true, color: titleFontColor }, lineHeight: 1.5 }),
+                this.$render("i-label", { caption: ((_a = this._data) === null || _a === void 0 ? void 0 : _a.title) || 'Your banner title', font: { size: '3rem', bold: true, color: titleFontColor }, lineHeight: 1.5 }),
                 this.$render("i-label", { visible: !!this._data.description, caption: this._data.description || '', font: { size: '1.375rem', color: descriptionFontColor }, lineHeight: 1.2 })));
             const buttons = (_b = this._data.linkButtons) === null || _b === void 0 ? void 0 : _b.filter(link => link.caption || link.url);
             if (buttons && buttons.length) {
@@ -406,7 +739,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
     };
     ScomBanner = __decorate([
         components_2.customModule,
-        components_2.customElements('i-scom-banner')
+        (0, components_2.customElements)('i-scom-banner')
     ], ScomBanner);
     exports.default = ScomBanner;
 });
