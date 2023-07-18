@@ -1,10 +1,6 @@
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -85,7 +81,9 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
       "type":"string"
     },
     "backgroundImageCid": {
-      "type":"string"
+      "title": "Background Image",
+      "type":"string",
+      "format": "data-cid"
     },
     "linkButtons":{
       "type":"array",
@@ -279,7 +277,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                       "elements": [
                         {
                           "type": "Control",
-                          "scope": "#/properties/backgroundImageUrl"
+                          "scope": "#/properties/backgroundImageCid"
                         }
                       ]
                     },
@@ -288,7 +286,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                       "elements": [
                         {
                           "type": "Control",
-                          "scope": "#/properties/backgroundImageCid"
+                          "scope": "#/properties/backgroundImageUrl"
                         }
                       ]
                     },
@@ -433,16 +431,16 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         descriptionFontColor: '#565656'
     };
     let ScomBanner = class ScomBanner extends components_2.Module {
-        static async create(options, parent) {
-            let self = new this(parent, options);
-            await self.ready();
-            return self;
-        }
         constructor(parent, options) {
             super(parent, options);
             this._data = { title: '' };
             this.tag = {};
             this.defaultEdit = true;
+        }
+        static async create(options, parent) {
+            let self = new this(parent, options);
+            await self.ready();
+            return self;
         }
         getData() {
             return this._data;
@@ -740,7 +738,7 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
     };
     ScomBanner = __decorate([
         components_2.customModule,
-        (0, components_2.customElements)('i-scom-banner')
+        components_2.customElements('i-scom-banner')
     ], ScomBanner);
     exports.default = ScomBanner;
 });

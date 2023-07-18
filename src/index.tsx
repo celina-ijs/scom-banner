@@ -31,7 +31,9 @@ const propertiesSchemaString = `{
       "type":"string"
     },
     "backgroundImageCid": {
-      "type":"string"
+      "title": "Background Image",
+      "type":"string",
+      "format": "data-cid"
     },
     "linkButtons":{
       "type":"array",
@@ -225,7 +227,7 @@ const propertiesUISchemaString = `{
                       "elements": [
                         {
                           "type": "Control",
-                          "scope": "#/properties/backgroundImageUrl"
+                          "scope": "#/properties/backgroundImageCid"
                         }
                       ]
                     },
@@ -234,7 +236,7 @@ const propertiesUISchemaString = `{
                       "elements": [
                         {
                           "type": "Control",
-                          "scope": "#/properties/backgroundImageCid"
+                          "scope": "#/properties/backgroundImageUrl"
                         }
                       ]
                     },
