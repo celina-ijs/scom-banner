@@ -14,6 +14,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 define("@scom/scom-banner/global/utils.ts", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -65,367 +76,223 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const Theme = components_2.Styles.Theme.ThemeVars;
-    const propertiesSchemaString = `{
-  "type":"object",
-  "required":[
-    "title"
-  ],
-  "properties":{
-    "title":{
-      "type":"string"
-    },
-    "description":{
-      "type":"string"
-    },
-    "backgroundImageUrl":{
-      "type":"string"
-    },
-    "backgroundImageCid": {
-      "title": "Background Image",
-      "type":"string",
-      "format": "data-cid"
-    },
-    "linkButtons":{
-      "type":"array",
-      "items":{
-        "type":"object",
-        "properties":{
-          "caption":{
-            "type":"string"
-          },
-          "url":{
-            "type":"string"
-          },
-          "buttonType": {
-            "type": "string",
-            "oneOf": [
-              {
-                "title": "Filled",
-                "const": "filled"
-              },
-              {
-                "title": "Outlined",
-                "const": "outlined"
-              },
-              {
-                "title": "Text",
-                "const": "text"
-              }
-            ]
-          },
-          "light": {
-            "title": "Light mode",
-            "type": "object",
-            "properties": {
-              "textColor":{
-                "title":"Text color",
-                "type":"string",
-                "format":"color"
-              },
-              "backgroundColor":{
-                "type":"string",
-                "format":"color"
-              }
-            }
-          },
-          "dark": {
-            "title": "Dark mode",
-            "type": "object",
-            "properties": {
-              "textColor":{
-                "title":"Text color",
-                "type":"string",
-                "format":"color"
-              },
-              "backgroundColor":{
-                "type":"string",
-                "format":"color"
-              }
-            }
-          }
-        }
-      }
-    },
-    "dark":{
-      "type":"object",
-      "properties":{
-        "titleFontColor":{
-          "type":"string",
-          "format":"color",
-          "readOnly":true
-        },
-        "descriptionFontColor":{
-          "type":"string",
-          "format":"color",
-          "readOnly":true
-        },
-        "linkButtonStyle":{
-          "type":"array",
-          "items":{
-            "type":"object",
-            "properties":{
-              "captionColor":{
-                "type":"string",
-                "format":"color"
-              },
-              "color":{
-                "type":"string",
-                "format":"color"
-              },
-              "buttonType":{
-                "type":"string",
-                "enum":[
-                  "filled",
-                  "outlined",
-                  "text"
-                ]
-              }
-            }
-          }
-        }
-      }
-    },
-    "light":{
-      "type":"object",
-      "properties":{
-        "titleFontColor":{
-          "type":"string",
-          "format":"color",
-          "readOnly":true
-        },
-        "descriptionFontColor":{
-          "type":"string",
-          "format":"color",
-          "readOnly":true
-        },
-        "linkButtonStyle":{
-          "type":"array",
-          "items":{
-            "type":"object",
-            "properties":{
-              "captionColor":{
-                "type":"string",
-                "format":"color"
-              },
-              "color":{
-                "type":"string",
-                "format":"color"
-              },
-              "buttonType":{
-                "type":"string",
-                "enum":[
-                  "filled",
-                  "outlined",
-                  "text"
-                ]
-              }
-            }
-          }
-        }
-      }
-    },
-    "textAlign":{
-      "type":"string",
-      "oneOf":[
-        {"title": "Left", "const":  "left"},
-        {"title": "Center", "const":  "center"},
-        {"title": "Right", "const":  "right"}
-      ]
-    },
-    "height":{
-      "type":"number"
-    }
-  }
-}
-`;
-    const propertiesUISchemaString = `{
-  "type": "VerticalLayout",
-  "elements": [
-    {
-      "type": "HorizontalLayout",
-      "elements": [
-        {
-          "type": "Categorization",
-          "elements": [
+    const propertiesUISchema = {
+        type: "VerticalLayout",
+        elements: [
             {
-              "type": "Category",
-              "label": "General settings",
-              "elements": [
-                {
-                  "type": "VerticalLayout",
-                  "elements": [
+                type: "HorizontalLayout",
+                elements: [
                     {
-                      "type": "HorizontalLayout",
-                      "elements": [
-                        {
-                          "type": "Control",
-                          "scope": "#/properties/title"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "HorizontalLayout",
-                      "elements": [
-                        {
-                          "type": "Control",
-                          "scope": "#/properties/description"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "HorizontalLayout",
-                      "elements": [
-                        {
-                          "type": "Control",
-                          "scope": "#/properties/backgroundImageCid"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "HorizontalLayout",
-                      "elements": [
-                        {
-                          "type": "Control",
-                          "scope": "#/properties/backgroundImageUrl"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "HorizontalLayout",
-                      "elements": [
-                        {
-                          "type": "Control",
-                          "scope": "#/properties/linkButtons",
-                          "options": {
-                            "elementLabelProp": "caption",
-                            "detail": {
-                              "type": "VerticalLayout",
-                              "elements": [
-                                {
-                                  "type": "HorizontalLayout",
-                                  "elements": [
+                        type: "Categorization",
+                        elements: [
+                            {
+                                type: "Category",
+                                label: "General settings",
+                                elements: [
                                     {
-                                      "type": "Control",
-                                      "scope": "#/properties/caption"
-                                    },
-                                    {
-                                      "type": "Control",
-                                      "scope": "#/properties/url"
-                                    },
-                                    {
-                                      "type": "Control",
-                                      "scope": "#/properties/buttonType"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "HorizontalLayout",
-                                  "elements": [
-                                    {
-                                      "type": "Group",
-                                      "label": "Dark",
-                                      "elements": [
-                                        {
-                                          "type": "VerticalLayout",
-                                          "elements": [
+                                        type: "VerticalLayout",
+                                        elements: [
                                             {
-                                              "type": "HorizontalLayout",
-                                              "elements": [
-                                                {
-                                                  "type": "Control",
-                                                  "scope": "#/properties/dark/properties/textColor"
-                                                },
-                                                {
-                                                  "type": "Control",
-                                                  "scope": "#/properties/dark/properties/backgroundColor"
-                                                }
-                                              ]
-                                            }
-                                          ]
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "HorizontalLayout",
-                                  "elements": [
-                                    {
-                                      "type": "Group",
-                                      "label": "Light",
-                                      "elements": [
-                                        {
-                                          "type": "VerticalLayout",
-                                          "elements": [
+                                                type: "HorizontalLayout",
+                                                elements: [
+                                                    {
+                                                        type: "Control",
+                                                        scope: "#/properties/title"
+                                                    }
+                                                ]
+                                            },
                                             {
-                                              "type": "HorizontalLayout",
-                                              "elements": [
-                                                {
-                                                  "type": "Control",
-                                                  "scope": "#/properties/light/properties/textColor"
-                                                },
-                                                {
-                                                  "type": "Control",
-                                                  "scope": "#/properties/light/properties/backgroundColor"
-                                                }
-                                              ]
+                                                type: "HorizontalLayout",
+                                                elements: [
+                                                    {
+                                                        type: "Control",
+                                                        scope: "#/properties/description"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                type: "HorizontalLayout",
+                                                elements: [
+                                                    {
+                                                        type: "Control",
+                                                        scope: "#/properties/backgroundImageCid"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                type: "HorizontalLayout",
+                                                elements: [
+                                                    {
+                                                        type: "Control",
+                                                        scope: "#/properties/backgroundImageUrl"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                type: "HorizontalLayout",
+                                                elements: [
+                                                    {
+                                                        type: "Control",
+                                                        scope: "#/properties/linkButtons",
+                                                        options: {
+                                                            elementLabelProp: "caption",
+                                                            detail: {
+                                                                type: "HorizontalLayout",
+                                                                elements: [
+                                                                    {
+                                                                        type: "HorizontalLayout",
+                                                                        elements: [
+                                                                            {
+                                                                                type: "Control",
+                                                                                scope: "#/properties/caption"
+                                                                            },
+                                                                            {
+                                                                                type: "Control",
+                                                                                scope: "#/properties/url"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                ]
                                             }
-                                          ]
-                                        }
-                                      ]
+                                        ]
                                     }
-                                  ]
-                                }
-                              ]
+                                ]
+                            },
+                            {
+                                type: "Category",
+                                label: "Theme settings",
+                                elements: [
+                                    {
+                                        type: "VerticalLayout",
+                                        elements: [
+                                            {
+                                                type: "HorizontalLayout",
+                                                elements: [
+                                                    {
+                                                        type: "Control",
+                                                        scope: "#/properties/textAlign"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                type: "HorizontalLayout",
+                                                elements: [
+                                                    {
+                                                        type: "Control",
+                                                        scope: "#/properties/height"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                type: "HorizontalLayout",
+                                                elements: [
+                                                    {
+                                                        type: "Group",
+                                                        label: "Dark mode",
+                                                        elements: [
+                                                            {
+                                                                type: "Control",
+                                                                scope: "#/properties/dark/properties/titleFontColor"
+                                                            },
+                                                            {
+                                                                type: "Control",
+                                                                scope: "#/properties/dark/properties/descriptionFontColor"
+                                                            },
+                                                            {
+                                                                type: "Control",
+                                                                scope: "#/properties/dark/properties/linkButtonStyle",
+                                                                options: {
+                                                                    elementLabelProp: "caption",
+                                                                    detail: {
+                                                                        type: "HorizontalLayout",
+                                                                        elements: [
+                                                                            {
+                                                                                type: "HorizontalLayout",
+                                                                                elements: [
+                                                                                    {
+                                                                                        type: "Control",
+                                                                                        scope: "#/properties/captionColor"
+                                                                                    },
+                                                                                    {
+                                                                                        type: "Control",
+                                                                                        scope: "#/properties/color"
+                                                                                    },
+                                                                                    {
+                                                                                        type: "Control",
+                                                                                        scope: "#/properties/buttonType"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            }
+                                                        ]
+                                                    },
+                                                ]
+                                            },
+                                            {
+                                                type: "HorizontalLayout",
+                                                elements: [
+                                                    {
+                                                        type: "Group",
+                                                        label: "Light mode",
+                                                        elements: [
+                                                            {
+                                                                type: "Control",
+                                                                scope: "#/properties/light/properties/titleFontColor"
+                                                            },
+                                                            {
+                                                                type: "Control",
+                                                                scope: "#/properties/light/properties/descriptionFontColor"
+                                                            },
+                                                            {
+                                                                type: "Control",
+                                                                scope: "#/properties/light/properties/linkButtonStyle",
+                                                                options: {
+                                                                    elementLabelProp: "caption",
+                                                                    detail: {
+                                                                        type: "HorizontalLayout",
+                                                                        elements: [
+                                                                            {
+                                                                                type: "HorizontalLayout",
+                                                                                elements: [
+                                                                                    {
+                                                                                        type: "Control",
+                                                                                        scope: "#/properties/captionColor"
+                                                                                    },
+                                                                                    {
+                                                                                        type: "Control",
+                                                                                        scope: "#/properties/color"
+                                                                                    },
+                                                                                    {
+                                                                                        type: "Control",
+                                                                                        scope: "#/properties/buttonType"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
                             }
-                          }
-                        }
-                      ]
+                        ]
                     }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "Category",
-              "label": "Theme settings",
-              "elements": [
-                {
-                  "type": "VerticalLayout",
-                  "elements": [
-                    {
-                      "type": "HorizontalLayout",
-                      "elements": [
-                        {
-                          "type": "Control",
-                          "scope": "#/properties/textAlign"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "HorizontalLayout",
-                      "elements": [
-                        {
-                          "type": "Control",
-                          "scope": "#/properties/height"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
+                ]
             }
-          ]
-        }
-      ]
-    }
-  ]
-}
-
-
-`;
-    const propertiesSchema = JSON.parse(propertiesSchemaString);
-    const propertiesUISchema = JSON.parse(propertiesUISchemaString);
+        ]
+    };
     const defaultColors = {
         titleFontColor: '#565656',
         descriptionFontColor: '#565656'
@@ -475,10 +342,40 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         setTheme(value) {
             this.onUpdateBlock(this.tag);
         }
-        getThemeSchema(readOnly = false) {
-            const themeSchema = {
-                type: 'object',
+        getDataSchema(readOnly = false) {
+            const schema = {
+                type: "object",
+                required: ["title"],
                 properties: {
+                    title: {
+                        type: "string"
+                    },
+                    description: {
+                        type: "string"
+                    },
+                    backgroundImageCid: {
+                        title: "Background Image",
+                        type: "string",
+                        format: "data-cid"
+                    },
+                    backgroundImageUrl: {
+                        title: "Url",
+                        type: "string"
+                    },
+                    linkButtons: {
+                        type: "array",
+                        items: {
+                            type: "object",
+                            properties: {
+                                caption: {
+                                    type: "string"
+                                },
+                                url: {
+                                    type: "string"
+                                }
+                            }
+                        }
+                    },
                     dark: {
                         type: 'object',
                         properties: {
@@ -498,10 +395,12 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                                     type: 'object',
                                     properties: {
                                         captionColor: {
+                                            title: "Text color",
                                             type: 'string',
                                             format: 'color'
                                         },
                                         color: {
+                                            title: "Background color",
                                             type: 'string',
                                             format: 'color'
                                         },
@@ -537,10 +436,12 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                                     type: 'object',
                                     properties: {
                                         captionColor: {
+                                            title: "Text color",
                                             type: 'string',
                                             format: 'color'
                                         },
                                         color: {
+                                            title: "Background color",
                                             type: 'string',
                                             format: 'color'
                                         },
@@ -571,42 +472,50 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                     }
                 }
             };
-            return themeSchema;
+            return schema;
         }
-        _getActions(propertiesSchema, themeSchema) {
+        _getActions(dataSchema) {
             const actions = [
                 {
                     name: 'Settings',
                     icon: 'cog',
                     command: (builder, userInputData) => {
                         let oldData = {};
+                        let oldTag = {};
                         return {
                             execute: async () => {
                                 oldData = JSON.parse(JSON.stringify(this._data));
-                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.title) !== undefined)
-                                    this._data.title = userInputData.title;
-                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.description) !== undefined)
-                                    this._data.description = userInputData.description;
-                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.backgroundImageUrl) !== undefined)
-                                    this._data.backgroundImageUrl = userInputData.backgroundImageUrl;
-                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.backgroundImageCid) !== undefined)
-                                    this._data.backgroundImageCid = userInputData.backgroundImageCid;
-                                if ((userInputData === null || userInputData === void 0 ? void 0 : userInputData.linkButtons) !== undefined)
-                                    this._data.linkButtons = userInputData.linkButtons;
-                                this.onUpdateBlock(this.tag);
+                                const { title, description, backgroundImageCid, backgroundImageUrl, linkButtons } = userInputData, themeSettings = __rest(userInputData, ["title", "description", "backgroundImageCid", "backgroundImageUrl", "linkButtons"]);
+                                const generalSettings = {
+                                    title: title,
+                                    description: description,
+                                    backgroundImageCid: backgroundImageCid,
+                                    backgroundImageUrl: backgroundImageUrl,
+                                    linkButtons: linkButtons
+                                };
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
-                                    builder.setData(this._data);
+                                    builder.setData(generalSettings);
+                                this.setData(generalSettings);
+                                oldTag = JSON.parse(JSON.stringify(this.tag));
+                                if (builder)
+                                    builder.setTag(themeSettings);
+                                else
+                                    this.setTag(themeSettings);
                             },
                             undo: async () => {
                                 this._data = JSON.parse(JSON.stringify(oldData));
                                 this.onUpdateBlock(this.tag);
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
                                     builder.setData(this._data);
+                                if (builder)
+                                    builder.setTag(oldTag);
+                                else
+                                    this.setTag(oldTag);
                             },
                             redo: () => { }
                         };
                     },
-                    userInputDataSchema: propertiesSchema,
+                    userInputDataSchema: dataSchema,
                     userInputUISchema: propertiesUISchema
                 }
                 // {
@@ -641,8 +550,8 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                     name: 'Builder Configurator',
                     target: 'Builders',
                     getActions: () => {
-                        const themeSchema = this.getThemeSchema();
-                        return this._getActions(propertiesSchema, themeSchema);
+                        const schema = this.getDataSchema();
+                        return this._getActions(schema);
                     },
                     getData: this.getData.bind(this),
                     setData: async (data) => {
@@ -657,8 +566,8 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
                     name: 'Emdedder Configurator',
                     target: 'Embedders',
                     getActions: () => {
-                        const themeSchema = this.getThemeSchema(true);
-                        return this._getActions(propertiesSchema, themeSchema);
+                        const schema = this.getDataSchema(true);
+                        return this._getActions(schema);
                     },
                     getLinkParams: () => {
                         const data = this._data || {};

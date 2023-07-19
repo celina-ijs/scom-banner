@@ -5,7 +5,6 @@ declare module "@scom/scom-banner/global/utils.ts" {
         description?: string;
         backgroundImageCid?: string;
         backgroundImageUrl?: string;
-        url?: string;
         linkButtons?: ILinkButton[];
     }
     export interface ILinkButton {
@@ -79,7 +78,7 @@ declare module "@scom/scom-banner" {
         private updateTag;
         private setTag;
         private setTheme;
-        private getThemeSchema;
+        private getDataSchema;
         private _getActions;
         getConfigurators(): ({
             name: string;

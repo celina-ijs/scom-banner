@@ -3,7 +3,6 @@ export interface IConfig {
   description?: string;
   backgroundImageCid?: string;
   backgroundImageUrl?: string;
-  url?: string;
   linkButtons?: ILinkButton[];
 }
 
