@@ -46,9 +46,10 @@ define("@scom/scom-banner/index.css.ts", ["require", "exports", "@ijstech/compon
     exports.containerStyle = components_1.Styles.style({
         width: 'var(--layout-container-width)',
         maxWidth: 'var(--layout-container-max_width)',
-        overflow: 'var(--layout-container-overflow)',
+        // overflow: 'var(--layout-container-overflow)',
+        overflow: 'hidden',
         textAlign: 'var(--layout-container-text_align)',
-        margin: '0 auto'
+        margin: '0 auto',
     });
     exports.backgroundStyle = components_1.Styles.style({
         backgroundPosition: 'center !important',
