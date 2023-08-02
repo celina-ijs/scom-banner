@@ -1,0 +1,8 @@
+{
+    "name": "@scom/scom-banner",
+    "type": "widget",
+    "version": "0.1.8",
+    "dependencies": [
+        "@ijstech/components"
+    ]
+}
