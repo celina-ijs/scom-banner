@@ -444,8 +444,8 @@ export default class ScomBanner extends Module {
   private _getActions(dataSchema: IDataSchema) {
     const actions = [
       {
-        name: 'Settings',
-        icon: 'cog',
+        name: 'Edit',
+        icon: 'edit',
         command: (builder: any, userInputData: any) => {
           let oldData = {};
           let oldTag = {};
