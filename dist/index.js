@@ -482,8 +482,8 @@ define("@scom/scom-banner", ["require", "exports", "@ijstech/components", "@scom
         _getActions(dataSchema) {
             const actions = [
                 {
-                    name: 'Settings',
-                    icon: 'cog',
+                    name: 'Edit',
+                    icon: 'edit',
                     command: (builder, userInputData) => {
                         let oldData = {};
                         let oldTag = {};
